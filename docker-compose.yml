@@ -6,7 +6,7 @@ networks:
 
 services:
   prisma_postgres:
-    container_name: rodap_postgres
+    container_name: scrum_poker_postgres
     image: bitnami/postgresql
     restart: on-failure
     ports:
@@ -28,7 +28,7 @@ services:
       retries: 5
 
   app:
-    container_name: rodap_api
+    container_name: scrum_poker_api
     restart: on-failure
     build:
       context: .
@@ -38,7 +38,7 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@rodap_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     command: ash -c "npx prisma migrate dev && pnpm start:dev"
     networks:
       - app_tier
@@ -55,7 +55,7 @@ services:
         condition: service_healthy
 
   prisma_studio:
-    container_name: rodap_studio
+    container_name: scrum_poker_studio
     image: timothyjmiller/prisma-studio
     restart: on-failure
     ports:
@@ -63,7 +63,7 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@rodap_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     networks:
       - app_tier
     depends_on:
