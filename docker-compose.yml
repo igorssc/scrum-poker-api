@@ -39,7 +39,7 @@ services:
       - .env
     environment:
       - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
-    command: ash -c "npx prisma migrate dev && pnpm start:dev"
+    command: ash -c "npx prisma migrate dev && pnpm i && pnpm start:dev"
     networks:
       - app_tier
     healthcheck:
