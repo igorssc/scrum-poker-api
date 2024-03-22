@@ -14,6 +14,14 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
+  const corsOptions = {
+    // origin: 'http://localhost:3000',
+    origin: '*',
+    methods: '*',
+  };
+
+  app.enableCors(corsOptions);
+
   await app.listen(3000);
 }
 bootstrap();
