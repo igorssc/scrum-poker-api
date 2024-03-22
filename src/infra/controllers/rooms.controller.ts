@@ -22,8 +22,8 @@ import { FindAllRoomsByLocationService } from '@/application/use-cases/rooms/fin
 import { SignOutMemberService } from '@/application/use-cases/members/sign-out-member.service';
 import { DeleteUniqueRoomService } from '@/application/use-cases/rooms/delete-unique-room.service';
 import { VoteRoomDto } from '../dtos/rooms/vote-room.dto';
-import { VoteRoomService } from '@/application/use-cases/rooms/vote-room.service';
-import { ClearVotesRoomService } from '@/application/use-cases/rooms/clear-votes-room.service';
+import { VoteMemberService } from '@/application/use-cases/members/vote-member.service';
+import { ClearVotesMembersService } from '@/application/use-cases/members/clear-votes-members.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -35,8 +35,8 @@ export class RoomsController {
     private updateRoomService: UpdateRoomService,
     private signOutMemberService: SignOutMemberService,
     private deleteUniqueRoomService: DeleteUniqueRoomService,
-    private voteRoomService: VoteRoomService,
-    private clearVotesRoomService: ClearVotesRoomService,
+    private voteMemberService: VoteMemberService,
+    private clearVotesMembersService: ClearVotesMembersService,
   ) {}
 
   @Get('/location')
@@ -71,7 +71,7 @@ export class RoomsController {
 
   @Post(':roomId/vote')
   async vote(@Param('roomId') roomId: string, @Body() body: VoteRoomDto) {
-    await this.voteRoomService.execute({
+    await this.voteMemberService.execute({
       userId: body.user_id,
       vote: body.vote,
       roomId,
@@ -83,7 +83,7 @@ export class RoomsController {
     @Param('roomId') roomId: string,
     @Query('user_id') userId: string,
   ) {
-    await this.clearVotesRoomService.execute({
+    await this.clearVotesMembersService.execute({
       userId,
       roomId,
     });
