@@ -27,7 +27,7 @@ export class DeleteUniqueRoomService {
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
-    const userActionIsOwnerTheRoom = roomExists.owner_id !== userId;
+    const userActionIsOwnerTheRoom = roomExists.owner_id === userId;
 
     if (!userActionIsOwnerTheRoom)
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
