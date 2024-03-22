@@ -9,9 +9,10 @@ import { FindUniqueRoomService } from './find-unique-room.service';
 import { PrismaModule } from '@/application/providers/prisma/prisma.module';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { PrismaMembersRepository } from '@/application/repositories/implementations/prisma/members.repository';
+import { MembersModule } from '../members/members.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule],
+  imports: [UsersModule, PrismaModule, MembersModule],
   providers: [
     CreateRoomService,
     UpdateRoomService,

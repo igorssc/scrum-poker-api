@@ -45,8 +45,11 @@ export class RoomsController {
     return room;
   }
 
-  @Post('sign-out')
-  async signOut(@Body() body: SignOutRoomDto) {}
+  @Post('sign-out/:roomId')
+  async signOut(
+    @Param('roomId') roomId: string,
+    @Body() body: SignOutRoomDto,
+  ) {}
 
   @Post('sign-in')
   async signIn(@Body() body: SignInRoomDto) {}

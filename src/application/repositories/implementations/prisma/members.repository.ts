@@ -2,6 +2,7 @@ import { PrismaService } from '@/application/providers/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
+  DeleteMemberProps,
   FindMemberByIdProps,
   MembersRepository,
 } from '../../members.repository';
@@ -40,7 +41,11 @@ export class PrismaMembersRepository implements MembersRepository {
     return data;
   }
 
-  async deleteUnique(memberId: string) {
-    return await this.prisma.member.delete({ where: { id: memberId } });
+  async deleteUnique({ memberId, roomId }: DeleteMemberProps) {
+    const memberDeleted = await this.prisma.member.deleteMany({
+      where: { room_id: roomId, member_id: memberId },
+    });
+
+    return memberDeleted[0];
   }
 }

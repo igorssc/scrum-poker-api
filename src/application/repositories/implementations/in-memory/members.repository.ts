@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Member } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import {
+  DeleteMemberProps,
   FindMemberByIdProps,
   MembersRepository,
 } from '../../members.repository';
@@ -52,8 +53,10 @@ export class InMemoryMembersRepository implements MembersRepository {
     return { ...this.items[memberIndex] };
   }
 
-  async deleteUnique(memberId: string) {
-    const memberIndex = this.items.findIndex((item) => item.id === memberId);
+  async deleteUnique({ memberId, roomId }: DeleteMemberProps) {
+    const memberIndex = this.items.findIndex(
+      (item) => item.member_id === memberId && item.room_id === roomId,
+    );
 
     if (memberIndex < 0) {
       return null;

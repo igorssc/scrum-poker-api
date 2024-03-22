@@ -5,6 +5,11 @@ export interface FindMemberByIdProps {
   roomId: string;
 }
 
+export interface DeleteMemberProps {
+  memberId: string;
+  roomId: string;
+}
+
 export abstract class MembersRepository {
   create: (member: Prisma.MemberCreateInput) => Promise<Member>;
 
@@ -15,5 +20,5 @@ export abstract class MembersRepository {
 
   findById: (props: FindMemberByIdProps) => Promise<Member | null>;
 
-  deleteUnique: (memberId: string) => Promise<Member>;
+  deleteUnique: (props: DeleteMemberProps) => Promise<Member>;
 }
