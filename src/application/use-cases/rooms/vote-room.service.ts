@@ -31,11 +31,11 @@ export class VoteRoomService {
   async execute(
     data: VoteRoomServiceExecuteProps,
   ): Promise<VoteRoomUseCaseResponse> {
-    const roomsExists = await this.roomsRepository.findById(data.roomId);
+    const roomExists = await this.roomsRepository.findById(data.roomId);
 
-    if (!roomsExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
-    const userActionIsOwnerTheRoom = roomsExists.owner_id !== data.userId;
+    const userActionIsOwnerTheRoom = roomExists.owner_id !== data.userId;
 
     if (!userActionIsOwnerTheRoom) {
       const userActionIsInsideTheRoom =

@@ -23,11 +23,11 @@ export class DeleteUniqueRoomService {
     roomId,
     userId,
   }: DeleteUniqueRoomServiceExecuteProps): Promise<Room> {
-    const roomsExists = await this.roomsRepository.findById(roomId);
+    const roomExists = await this.roomsRepository.findById(roomId);
 
-    if (!roomsExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
-    const userActionIsOwnerTheRoom = roomsExists.owner_id !== userId;
+    const userActionIsOwnerTheRoom = roomExists.owner_id !== userId;
 
     if (!userActionIsOwnerTheRoom)
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
