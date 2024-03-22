@@ -1,7 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
-import { USER_WITHOUT_PERMISSION } from '@/application/errors/errors.constants';
+import {
+  ROOM_NOT_FOUND,
+  USER_WITHOUT_PERMISSION,
+} from '@/application/errors/errors.constants';
 
 interface SignOutMemberServiceExecuteProps {
   roomId: string;
@@ -17,9 +24,11 @@ export class SignOutMemberService {
   ) {}
 
   async execute(data: SignOutMemberServiceExecuteProps) {
-    const room = await this.roomsRepository.findById(data.roomId);
+    const roomExists = await this.roomsRepository.findById(data.roomId);
 
-    const userActionIsOwnerTheRoom = room.owner_id !== data.userActionId;
+    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
+
+    const userActionIsOwnerTheRoom = roomExists.owner_id !== data.userActionId;
 
     if (!userActionIsOwnerTheRoom) {
       const userActionIsInsideTheRoom =
