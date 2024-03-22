@@ -39,9 +39,10 @@ model Room {
 }
 
 model Member {
-  id        String @id @default(uuid())
-  member_id String
-  room_id   String
+  id         String   @id @default(uuid())
+  member_id  String
+  room_id    String
+  created_at DateTime @default(now())
 
   member User @relation(fields: [member_id], references: [id])
   room   Room @relation(fields: [room_id], references: [id])
