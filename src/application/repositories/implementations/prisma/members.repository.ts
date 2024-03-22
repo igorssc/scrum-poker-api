@@ -19,7 +19,7 @@ export class PrismaMembersRepository implements MembersRepository {
     return memberCreated;
   }
 
-  async findById(props: FindMemberByIdProps) {
+  async findByMemberAndRoomId(props: FindMemberByIdProps) {
     const member = await this.prisma.member.findFirst({
       where: {
         member_id: props.memberId,

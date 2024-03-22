@@ -18,7 +18,7 @@ export abstract class MembersRepository {
     member: Prisma.MemberUpdateInput,
   ) => Promise<Member>;
 
-  findById: (props: FindMemberByIdProps) => Promise<Member | null>;
+  findByMemberAndRoomId: (props: FindMemberByIdProps) => Promise<Member | null>;
 
   deleteUnique: (props: DeleteMemberProps) => Promise<Member>;
 }

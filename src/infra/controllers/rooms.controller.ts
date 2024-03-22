@@ -19,6 +19,7 @@ import { SignInRoomAcceptDto } from '../dtos/rooms/sign-in-room-accept.dto';
 import { CreateRoomService } from '@/application/use-cases/rooms/create-room.service';
 import { UpdateRoomService } from '@/application/use-cases/rooms/update-room.service';
 import { FindAllRoomsByLocationService } from '@/application/use-cases/rooms/find-all-rooms-by-location.service';
+import { SignOutMemberService } from '@/application/use-cases/members/sign-out-member.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -28,6 +29,7 @@ export class RoomsController {
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
     private createRoomService: CreateRoomService,
     private updateRoomService: UpdateRoomService,
+    private signOutMemberService: SignOutMemberService,
   ) {}
 
   @Get('/location')
@@ -46,10 +48,13 @@ export class RoomsController {
   }
 
   @Post('sign-out/:roomId')
-  async signOut(
-    @Param('roomId') roomId: string,
-    @Body() body: SignOutRoomDto,
-  ) {}
+  async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {
+    await this.signOutMemberService.execute({
+      memberId: body.room_id,
+      roomId,
+      userActionId: body.user_action_id,
+    });
+  }
 
   @Post('sign-in')
   async signIn(@Body() body: SignInRoomDto) {}

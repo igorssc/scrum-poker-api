@@ -24,7 +24,7 @@ export class InMemoryMembersRepository implements MembersRepository {
     return memberCreated;
   }
 
-  async findById(props: FindMemberByIdProps) {
+  async findByMemberAndRoomId(props: FindMemberByIdProps) {
     const member = this.items.find(
       (item) =>
         item.member_id === props.memberId && item.room_id === props.roomId,
