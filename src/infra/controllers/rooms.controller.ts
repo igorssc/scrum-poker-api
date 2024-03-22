@@ -49,7 +49,14 @@ export class RoomsController {
   @Post()
   @HttpCode(201)
   async createRoom(@Body() body: CreateRoomDto) {
-    const { room } = await this.createRoomService.execute(body);
+    const { room } = await this.createRoomService.execute({
+      name: body.name,
+      userName: body.user_name,
+      lat: body.lat,
+      lng: body.lng,
+      private: body.private,
+      userId: body.user_id,
+    });
 
     return room;
   }

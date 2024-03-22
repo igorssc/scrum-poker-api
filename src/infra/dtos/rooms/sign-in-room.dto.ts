@@ -1,5 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 import {
+  ACCESS_ROOM_ERROR_MESSAGE,
   ROOM_ID_ERROR_MESSAGE,
   USER_ID_ERROR_MESSAGE,
   USER_NAME_ERROR_MESSAGE,
@@ -15,4 +16,8 @@ export abstract class SignInRoomDto {
 
   @IsString({ message: ROOM_ID_ERROR_MESSAGE })
   room_id: string;
+
+  @IsOptional()
+  @IsString({ message: ACCESS_ROOM_ERROR_MESSAGE })
+  access?: string;
 }
