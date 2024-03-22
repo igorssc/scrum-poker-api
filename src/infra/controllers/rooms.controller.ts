@@ -18,14 +18,14 @@ import { SignInRoomDto } from '../dtos/rooms/sign-in-room.dto';
 import { SignInRoomAcceptDto } from '../dtos/rooms/sign-in-room-accept.dto';
 import { CreateRoomService } from '@/application/use-cases/rooms/create-room.service';
 import { UpdateRoomService } from '@/application/use-cases/rooms/update-room.service';
-import { FindUniqueRoomByLocationService } from '@/application/use-cases/rooms/find-unique-room-by-location.service';
+import { FindAllRoomsByLocationService } from '@/application/use-cases/rooms/find-all-rooms-by-location.service';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
     private exampleEvent: ExampleEvent,
 
-    private findUniqueRoomByLocationService: FindUniqueRoomByLocationService,
+    private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
     private createRoomService: CreateRoomService,
     private updateRoomService: UpdateRoomService,
   ) {}
