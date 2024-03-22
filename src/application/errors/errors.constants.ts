@@ -11,3 +11,5 @@ export const USER_IS_NOT_IN_THE_ROOM = 'Usuário não está na sala.';
 export const USER_IS_ALREADY_IN_THE_ROOM = 'Usuário já está na sala.';
 
 export const ACCESS_ROOM_INVALID = 'A chave de acesso direto está inválida.';
+
+export const OWNER_ID_ROOM_INVALID = 'O id do admin da sala está inválido.';

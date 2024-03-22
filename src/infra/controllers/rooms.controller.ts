@@ -25,6 +25,7 @@ import { VoteRoomDto } from '../dtos/rooms/vote-room.dto';
 import { VoteMemberService } from '@/application/use-cases/members/vote-member.service';
 import { ClearVotesMembersService } from '@/application/use-cases/members/clear-votes-members.service';
 import { SignInMemberService } from '@/application/use-cases/members/sign-in-member.service';
+import { SignInAcceptMemberService } from '@/application/use-cases/members/sign-in-accept-member.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -39,6 +40,7 @@ export class RoomsController {
     private voteMemberService: VoteMemberService,
     private clearVotesMembersService: ClearVotesMembersService,
     private signInMemberService: SignInMemberService,
+    private signInAcceptMemberService: SignInAcceptMemberService,
   ) {}
 
   @Get('/location')
@@ -77,7 +79,14 @@ export class RoomsController {
   async signInAccept(
     @Param('roomId') roomId: string,
     @Body() body: SignInRoomAcceptDto,
-  ) {}
+  ) {
+    await this.signInAcceptMemberService.execute({
+      roomId,
+      ownerId: body.owner_id,
+      access: body.access,
+      userId: body.user_id,
+    });
+  }
 
   @Post(':roomId/sign-out')
   async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {

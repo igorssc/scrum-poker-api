@@ -9,6 +9,7 @@ import { VoteMemberService } from './vote-member.service';
 import { ClearVotesMembersService } from './clear-votes-members.service';
 import { SignInMemberService } from './sign-in-member.service';
 import { UsersModule } from '../users/users.module';
+import { SignInAcceptMemberService } from './sign-in-accept-member.service';
 
 @Module({
   imports: [PrismaModule, UsersModule],
@@ -17,6 +18,7 @@ import { UsersModule } from '../users/users.module';
     SignInMemberService,
     VoteMemberService,
     ClearVotesMembersService,
+    SignInAcceptMemberService,
     { provide: RoomsRepository, useClass: PrismaRoomsRepository },
     { provide: MembersRepository, useClass: PrismaMembersRepository },
   ],
@@ -25,6 +27,7 @@ import { UsersModule } from '../users/users.module';
     SignInMemberService,
     VoteMemberService,
     ClearVotesMembersService,
+    SignInAcceptMemberService,
   ],
 })
 export class MembersModule {}
