@@ -1,8 +1,8 @@
 import { PrismaService } from '@/application/providers/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, StatusRoom } from '@prisma/client';
 import { LocationProps, RoomsRepository } from '../../rooms.repository';
-import { calculateBoundingBox } from '@/application/utils/calculateBoundingBox';
+import { calculateBoundingBox } from '@/application/utils/calculate-bounding-box';
 
 @Injectable()
 export class PrismaRoomsRepository implements RoomsRepository {
@@ -20,6 +20,7 @@ export class PrismaRoomsRepository implements RoomsRepository {
     const room = await this.prisma.room.findUnique({
       where: {
         id,
+        status: StatusRoom.OPEN,
       },
     });
 
@@ -35,18 +36,15 @@ export class PrismaRoomsRepository implements RoomsRepository {
 
     const room = await this.prisma.room.findMany({
       where: {
-        AND: [
-          {
-            lat: {
-              gte: minLat,
-              lte: maxLat,
-            },
-            lng: {
-              gte: minLng,
-              lte: maxLng,
-            },
-          },
-        ],
+        lat: {
+          gte: minLat,
+          lte: maxLat,
+        },
+        lng: {
+          gte: minLng,
+          lte: maxLng,
+        },
+        status: StatusRoom.OPEN,
       },
     });
 

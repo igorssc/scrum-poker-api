@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Room, StatusRoom } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { LocationProps, RoomsRepository } from '../../rooms.repository';
-import { calculateBoundingBox } from '@/application/utils/calculateBoundingBox';
+import { calculateBoundingBox } from '@/application/utils/calculate-bounding-box';
 
 @Injectable()
 export class InMemoryRoomsRepository implements RoomsRepository {
@@ -17,6 +17,7 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       status: StatusRoom.OPEN,
       lat: data.lat,
       lng: data.lng,
+      private: data.private,
     };
 
     this.items.push(roomCreated);
@@ -25,7 +26,9 @@ export class InMemoryRoomsRepository implements RoomsRepository {
   }
 
   async findById(id: string) {
-    const room = this.items.find((item) => item.id === id);
+    const room = this.items.find(
+      (item) => item.id === id && item.status === StatusRoom.OPEN,
+    );
 
     if (!room) {
       return null;
@@ -46,7 +49,8 @@ export class InMemoryRoomsRepository implements RoomsRepository {
         item.lat >= minLat &&
         item.lat <= maxLat &&
         item.lng >= minLng &&
-        item.lng <= maxLng,
+        item.lng <= maxLng &&
+        item.status === StatusRoom.OPEN,
     );
 
     return room;

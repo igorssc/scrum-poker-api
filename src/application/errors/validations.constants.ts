@@ -1,3 +1,6 @@
+export const PRIVATE_ROOM_ERROR_MESSAGE =
+  'O valor da sala privada deve ser um booleano.';
+
 export const NAME_ERROR_MESSAGE = 'O nome deve ser uma string.';
 
 export const USER_ID_ERROR_MESSAGE = 'O id do usuário deve ser uma string.';

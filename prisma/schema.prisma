@@ -30,6 +30,7 @@ model Room {
   status     StatusRoom
   lat        Float?
   lng        Float?
+  private    Boolean
 
   owner   User     @relation(fields: [owner_id], references: [id])
   members Member[]

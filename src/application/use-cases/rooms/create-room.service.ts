@@ -32,6 +32,7 @@ export class CreateRoomService {
       status: StatusRoom.OPEN,
       lat: data.lat,
       lng: data.lng,
+      private: !!data.private,
     });
 
     return { room: roomCreated };

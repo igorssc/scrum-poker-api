@@ -1,4 +1,11 @@
-import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   LATITUDE_MAX_ERROR_MESSAGE,
@@ -8,6 +15,7 @@ import {
   LONGITUDE_MIN_ERROR_MESSAGE,
   LONGITUDE_NUMBER_ERROR_MESSAGE,
   NAME_ERROR_MESSAGE,
+  PRIVATE_ROOM_ERROR_MESSAGE,
   USER_NAME_ERROR_MESSAGE,
 } from '@/application/errors/validations.constants';
 
@@ -34,4 +42,9 @@ export abstract class CreateRoomDto {
   @Max(180, { message: LONGITUDE_MAX_ERROR_MESSAGE })
   @Type(() => Number)
   lng?: number;
+
+  @IsOptional()
+  @IsBoolean({ message: PRIVATE_ROOM_ERROR_MESSAGE })
+  @Type(() => Boolean)
+  private?: boolean;
 }
