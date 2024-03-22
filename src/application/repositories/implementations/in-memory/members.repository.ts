@@ -5,6 +5,7 @@ import {
   DeleteMemberProps,
   FindMemberByIdProps,
   MembersRepository,
+  UpdateProps,
 } from '../../members.repository';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class InMemoryMembersRepository implements MembersRepository {
       member_id: data.member.connect.id,
       room_id: data.room.connect.id,
       created_at: new Date(),
+      vote: null,
     };
 
     this.items.push(memberCreated);
@@ -41,8 +43,11 @@ export class InMemoryMembersRepository implements MembersRepository {
     return this.items.length;
   }
 
-  async update(memberId: string, member: Prisma.MemberUpdateInput) {
-    const memberIndex = this.items.findIndex((item) => item.id === memberId);
+  async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
+    const memberIndex = this.items.findIndex(
+      (item) =>
+        item.member_id === props.memberId && item.room_id === props.roomId,
+    );
 
     if (memberIndex < 0) {
       return null;

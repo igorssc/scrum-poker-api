@@ -10,11 +10,16 @@ export interface DeleteMemberProps {
   roomId: string;
 }
 
+export interface UpdateProps {
+  memberId?: string;
+  roomId: string;
+}
+
 export abstract class MembersRepository {
   create: (member: Prisma.MemberCreateInput) => Promise<Member>;
 
   update: (
-    memberId: string,
+    props: UpdateProps,
     member: Prisma.MemberUpdateInput,
   ) => Promise<Member>;
 

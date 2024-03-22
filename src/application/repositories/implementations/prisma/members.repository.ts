@@ -5,6 +5,7 @@ import {
   DeleteMemberProps,
   FindMemberByIdProps,
   MembersRepository,
+  UpdateProps,
 } from '../../members.repository';
 
 @Injectable()
@@ -30,15 +31,16 @@ export class PrismaMembersRepository implements MembersRepository {
     return member;
   }
 
-  async update(memberId: string, member: Prisma.MemberUpdateInput) {
-    const data = await this.prisma.member.update({
+  async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
+    const data = await this.prisma.member.updateMany({
       where: {
-        id: memberId,
+        member_id: props.memberId,
+        room_id: props.roomId,
       },
       data: member,
     });
 
-    return data;
+    return data[0];
   }
 
   async deleteUnique({ memberId, roomId }: DeleteMemberProps) {
