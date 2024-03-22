@@ -11,23 +11,23 @@ import {
 } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 
-export interface ClearVotesRoomUseCaseResponse {
+export interface ClearVotesMembersUseCaseResponse {
   member: Member;
 }
 
-interface ClearVotesRoomServiceExecuteProps {
+interface ClearVotesMembersServiceExecuteProps {
   userId: string;
   roomId: string;
 }
 
 @Injectable()
-export class ClearVotesRoomService {
+export class ClearVotesMembersService {
   constructor(
     private roomsRepository: RoomsRepository,
     private membersRepository: MembersRepository,
   ) {}
 
-  async execute(data: ClearVotesRoomServiceExecuteProps): Promise<void> {
+  async execute(data: ClearVotesMembersServiceExecuteProps): Promise<void> {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);

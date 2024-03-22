@@ -11,26 +11,26 @@ import {
 } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 
-export interface VoteRoomUseCaseResponse {
+export interface VoteMemberUseCaseResponse {
   member: Member;
 }
 
-interface VoteRoomServiceExecuteProps {
+interface VoteMemberServiceExecuteProps {
   userId: string;
   roomId: string;
   vote: string;
 }
 
 @Injectable()
-export class VoteRoomService {
+export class VoteMemberService {
   constructor(
     private roomsRepository: RoomsRepository,
     private membersRepository: MembersRepository,
   ) {}
 
   async execute(
-    data: VoteRoomServiceExecuteProps,
-  ): Promise<VoteRoomUseCaseResponse> {
+    data: VoteMemberServiceExecuteProps,
+  ): Promise<VoteMemberUseCaseResponse> {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
