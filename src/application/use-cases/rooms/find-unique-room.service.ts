@@ -4,15 +4,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Room } from '@prisma/client';
 import { isUUID } from 'class-validator';
 
-interface FindUniqueRoomByIdUseCaseResponse {
+interface FindUniqueRoomUseCaseResponse {
   room: Room;
 }
 
 @Injectable()
-export class FindUniqueRoomByIdService {
+export class FindUniqueRoomService {
   constructor(private roomsRepository: RoomsRepository) {}
 
-  async execute(query: string): Promise<FindUniqueRoomByIdUseCaseResponse> {
+  async execute(query: string): Promise<FindUniqueRoomUseCaseResponse> {
     if (isUUID(query)) {
       const room = await this.roomsRepository.findById(query);
 
