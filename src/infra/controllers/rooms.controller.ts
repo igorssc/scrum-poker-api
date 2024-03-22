@@ -18,19 +18,23 @@ import { SignInRoomDto } from '../dtos/rooms/sign-in-room.dto';
 import { SignInRoomAcceptDto } from '../dtos/rooms/sign-in-room-accept.dto';
 import { CreateRoomService } from '@/application/use-cases/rooms/create-room.service';
 import { UpdateRoomService } from '@/application/use-cases/rooms/update-room.service';
+import { FindUniqueRoomByLocationService } from '@/application/use-cases/rooms/find-unique-room-by-location.service';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
     private exampleEvent: ExampleEvent,
 
+    private findUniqueRoomByLocationService: FindUniqueRoomByLocationService,
     private createRoomService: CreateRoomService,
     private updateRoomService: UpdateRoomService,
   ) {}
 
   @Get('/location')
   async findByLocation(@Query() query: FindRoomsByLocationDto) {
-    const { lat, lng, max_distance } = query;
+    const room = await this.findUniqueRoomByLocationService.execute(query);
+
+    return room;
   }
 
   @Post()
