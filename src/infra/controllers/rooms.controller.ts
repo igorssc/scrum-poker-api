@@ -16,10 +16,20 @@ import { FindRoomsByLocationDto } from '../dtos/rooms/find-rooms-by-location.dto
 import { SignOutRoomDto } from '../dtos/rooms/sign-out-room.dto';
 import { SignInRoomDto } from '../dtos/rooms/sign-in-room.dto';
 import { SignInRoomAcceptDto } from '../dtos/rooms/sign-in-room-accept.dto';
+import { CreateUserService } from '@/application/use-cases/users/create-user.service';
+import { User } from '@prisma/client';
+import {
+  CreateRoomService,
+  CreateRoomUseCaseResponse,
+} from '@/application/use-cases/rooms/create-room.service';
 
 @Controller('rooms')
 export class RoomsController {
-  constructor(private exampleEvent: ExampleEvent) {}
+  constructor(
+    private exampleEvent: ExampleEvent,
+    private createUserService: CreateUserService,
+    private createRoomService: CreateRoomService,
+  ) {}
 
   @Get('/location')
   async findByLocation(@Query() query: FindRoomsByLocationDto) {
@@ -28,7 +38,29 @@ export class RoomsController {
 
   @Post()
   @HttpCode(201)
-  async createRoom(@Body() body: CreateRoomDto) {}
+  async createRoom(
+    @Body() body: CreateRoomDto,
+  ): Promise<CreateRoomUseCaseResponse> {
+    let user: User;
+
+    if (!body.user_id) {
+      const userCreated = await this.createUserService.execute({
+        name: body.user_name,
+      });
+
+      user = userCreated.user;
+    }
+
+    const roomCreated = await this.createRoomService.execute({
+      name: body.name,
+      user_id: body.user_id || user.id,
+      user_name: body.user_name,
+      lat: body.lat,
+      lng: body.lng,
+    });
+
+    return roomCreated;
+  }
 
   @Post('sign-out')
   async signOut(@Body() body: SignOutRoomDto) {}
