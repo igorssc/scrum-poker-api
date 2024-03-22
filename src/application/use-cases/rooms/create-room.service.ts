@@ -4,6 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Room, StatusRoom } from '@prisma/client';
 import { CreateUserService } from '../users/create-user.service';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
+import { MembersRepository } from '@/application/repositories/members.repository';
 
 export interface CreateRoomUseCaseResponse {
   room: Room;
@@ -14,6 +15,7 @@ export class CreateRoomService {
   constructor(
     private roomsRepository: RoomsRepository,
     private createUserService: CreateUserService,
+    private membersRepository: MembersRepository,
   ) {}
 
   async execute(data: CreateRoomDto): Promise<CreateRoomUseCaseResponse> {
@@ -40,6 +42,11 @@ export class CreateRoomService {
       lat: data.lat,
       lng: data.lng,
       private: !!data.private,
+    });
+
+    await this.membersRepository.create({
+      member: { connect: { id: userId } },
+      room: { connect: { id: roomCreated.id } },
     });
 
     return { room: roomCreated };
