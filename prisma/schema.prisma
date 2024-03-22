@@ -32,7 +32,7 @@ model Room {
   lng        Float?
   private    Boolean
 
-  owner   User     @relation(fields: [owner_id], references: [id])
+  owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
 
   @@map("rooms")
@@ -42,10 +42,11 @@ model Member {
   id         String   @id @default(uuid())
   member_id  String
   room_id    String
+  vote       String?
   created_at DateTime @default(now())
 
-  member User @relation(fields: [member_id], references: [id])
-  room   Room @relation(fields: [room_id], references: [id])
+  member User @relation(fields: [member_id], references: [id], onDelete: Cascade)
+  room   Room @relation(fields: [room_id], references: [id], onDelete: Cascade)
 
   @@map("members")
 }
