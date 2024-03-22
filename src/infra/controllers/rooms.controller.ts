@@ -54,12 +54,16 @@ export class RoomsController {
   @Post('sign-in/accept')
   async signInAccept(@Body() body: SignInRoomAcceptDto) {}
 
-  @Patch('roomId')
+  @Patch(':roomId')
   async updateRoom(
     @Param('roomId') roomId: string,
+    @Query('user_id') userId: string,
     @Body() body: UpdateRoomDto,
   ) {
-    const { room } = await this.updateRoomService.execute(roomId, body);
+    const { room } = await this.updateRoomService.execute(
+      { roomId, userId },
+      body,
+    );
 
     return room;
   }
