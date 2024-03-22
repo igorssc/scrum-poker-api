@@ -1,8 +1,9 @@
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import { CreateRoomDto } from '@/infra/dtos/rooms/create-room.dto';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Room, StatusRoom } from '@prisma/client';
 import { CreateUserService } from '../users/create-user.service';
+import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 
 export interface CreateRoomUseCaseResponse {
   room: Room;
@@ -17,6 +18,12 @@ export class CreateRoomService {
 
   async execute(data: CreateRoomDto): Promise<CreateRoomUseCaseResponse> {
     let userId = data.user_id;
+
+    if (data.user_id) {
+      const user = await this.roomsRepository.findById(userId);
+
+      if (!user) throw new BadRequestException(USER_NOT_FOUND);
+    }
 
     if (!data.user_id) {
       const userCreated = await this.createUserService.execute({
