@@ -7,16 +7,24 @@ import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import { PrismaRoomsRepository } from '@/application/repositories/implementations/prisma/rooms.repository';
 import { VoteMemberService } from './vote-member.service';
 import { ClearVotesMembersService } from './clear-votes-members.service';
+import { SignInMemberService } from './sign-in-member.service';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, UsersModule],
   providers: [
     SignOutMemberService,
+    SignInMemberService,
     VoteMemberService,
     ClearVotesMembersService,
     { provide: RoomsRepository, useClass: PrismaRoomsRepository },
     { provide: MembersRepository, useClass: PrismaMembersRepository },
   ],
-  exports: [SignOutMemberService, VoteMemberService, ClearVotesMembersService],
+  exports: [
+    SignOutMemberService,
+    SignInMemberService,
+    VoteMemberService,
+    ClearVotesMembersService,
+  ],
 })
 export class MembersModule {}

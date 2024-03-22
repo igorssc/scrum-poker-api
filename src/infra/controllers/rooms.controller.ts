@@ -24,6 +24,7 @@ import { DeleteUniqueRoomService } from '@/application/use-cases/rooms/delete-un
 import { VoteRoomDto } from '../dtos/rooms/vote-room.dto';
 import { VoteMemberService } from '@/application/use-cases/members/vote-member.service';
 import { ClearVotesMembersService } from '@/application/use-cases/members/clear-votes-members.service';
+import { SignInMemberService } from '@/application/use-cases/members/sign-in-member.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -37,6 +38,7 @@ export class RoomsController {
     private deleteUniqueRoomService: DeleteUniqueRoomService,
     private voteMemberService: VoteMemberService,
     private clearVotesMembersService: ClearVotesMembersService,
+    private signInMemberService: SignInMemberService,
   ) {}
 
   @Get('/location')
@@ -61,11 +63,21 @@ export class RoomsController {
     return room;
   }
 
-  @Post('sign-in')
-  async signIn(@Body() body: SignInRoomDto) {}
+  @Post(':roomId/sign-in')
+  async signIn(@Param('roomId') roomId: string, @Body() body: SignInRoomDto) {
+    await this.signInMemberService.execute({
+      roomId,
+      userName: body.user_name,
+      access: body.access,
+      userId: body.user_id,
+    });
+  }
 
-  @Post('sign-in/accept')
-  async signInAccept(@Body() body: SignInRoomAcceptDto) {}
+  @Post(':roomId/sign-in/accept')
+  async signInAccept(
+    @Param('roomId') roomId: string,
+    @Body() body: SignInRoomAcceptDto,
+  ) {}
 
   @Post(':roomId/sign-out')
   async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {
