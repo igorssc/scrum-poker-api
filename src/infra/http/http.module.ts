@@ -5,6 +5,7 @@ import { WebSocketModule } from '../websockets/websockets.module';
 import { UsersModule } from '@/application/use-cases/users/users.module';
 import { RoomsModule } from '@/application/use-cases/rooms/rooms.module';
 import { MembersModule } from '@/application/use-cases/members/members.module';
+import { UsersController } from '../controllers/users.controller';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { MembersModule } from '@/application/use-cases/members/members.module';
     RoomsModule,
     MembersModule,
   ],
-  controllers: [RoomsController],
+  controllers: [RoomsController, UsersController],
 })
 export class HttpModule {}

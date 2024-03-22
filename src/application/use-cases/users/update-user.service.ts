@@ -8,7 +8,6 @@ interface UpdateUserUseCaseResponse {
 }
 
 interface UpdateUserDataProps {
-  userId: string;
   name: string;
 }
 
@@ -16,11 +15,12 @@ interface UpdateUserDataProps {
 export class UpdateUserService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async execute(data: UpdateUserDataProps): Promise<UpdateUserUseCaseResponse> {
-    const { name, userId } = data;
-
+  async execute(
+    userId: string,
+    data: UpdateUserDataProps,
+  ): Promise<UpdateUserUseCaseResponse> {
     const userUpdated = await this.usersRepository.update(userId, {
-      name: capitalizeInitials(name),
+      name: capitalizeInitials(data.name),
     });
 
     return { user: userUpdated };
