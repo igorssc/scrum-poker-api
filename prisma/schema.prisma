@@ -13,11 +13,11 @@ enum StatusRoom {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  created_at DateTime @default(now())
-  roomsOwner Room[]
-  rooms      Member[]
+  id          String   @id @default(uuid())
+  name        String
+  created_at  DateTime @default(now())
+  rooms_owner Room[]
+  rooms       Member[]
 
   @@map("users")
 }
@@ -25,25 +25,25 @@ model User {
 model Room {
   id         String     @id @default(uuid())
   name       String
-  ownerId    String
+  owner_id   String
   created_at DateTime   @default(now())
   status     StatusRoom
   lat        Float?
   lng        Float?
 
-  owner   User     @relation(fields: [ownerId], references: [id])
+  owner   User     @relation(fields: [owner_id], references: [id])
   members Member[]
 
   @@map("rooms")
 }
 
 model Member {
-  id       String @id @default(uuid())
-  memberId String
-  roomId   String
+  id        String @id @default(uuid())
+  member_id String
+  room_id   String
 
-  member User @relation(fields: [memberId], references: [id])
-  room   Room @relation(fields: [roomId], references: [id])
+  member User @relation(fields: [member_id], references: [id])
+  room   Room @relation(fields: [room_id], references: [id])
 
   @@map("members")
 }
