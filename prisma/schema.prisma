@@ -31,6 +31,7 @@ model Room {
   lat        Float?
   lng        Float?
   private    Boolean
+  access     String     @default(uuid())
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
