@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ExampleEvent } from '../websockets/events/enter-room';
+import { SignInEvent } from '../websockets/events/sign-in-member';
 import { CreateRoomDto } from '../dtos/rooms/create-room.dto';
 import { UpdateRoomDto } from '../dtos/rooms/update-room.dto';
 import { FindRoomsByLocationDto } from '../dtos/rooms/find-rooms-by-location.dto';
@@ -27,11 +27,13 @@ import { ClearVotesMembersService } from '@/application/use-cases/members/clear-
 import { SignInMemberService } from '@/application/use-cases/members/sign-in-member.service';
 import { SignInAcceptMemberService } from '@/application/use-cases/members/sign-in-accept-member.service';
 import { FindUniqueRoomService } from '@/application/use-cases/rooms/find-unique-room.service';
+import { SignOutEvent } from '../websockets/events/sign-out-member';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
-    private exampleEvent: ExampleEvent,
+    private signInEvent: SignInEvent,
+    private signOutEvent: SignOutEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -83,6 +85,11 @@ export class RoomsController {
       userId: body.user_id,
     });
 
+    this.signInEvent.send(data.room.id, {
+      user: data.user,
+      member: data.member,
+    });
+
     return data;
   }
 
@@ -106,6 +113,8 @@ export class RoomsController {
       roomId,
       userActionId: body.user_action_id,
     });
+
+    this.signOutEvent.send(roomId, body.member_id);
   }
 
   @Post(':roomId/vote')

@@ -1,15 +1,10 @@
 import { Body, Controller, Param, Patch } from '@nestjs/common';
-import { ExampleEvent } from '../websockets/events/enter-room';
 import { UpdateUserService } from '@/application/use-cases/users/update-user.service';
 import { UpdateUserDto } from '../dtos/users/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private exampleEvent: ExampleEvent,
-
-    private updateUserService: UpdateUserService,
-  ) {}
+  constructor(private updateUserService: UpdateUserService) {}
 
   @Patch(':userId')
   async updateUser(

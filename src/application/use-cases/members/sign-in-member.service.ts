@@ -72,7 +72,7 @@ export class SignInMemberService {
       throw new UnauthorizedException(ACCESS_ROOM_INVALID);
     }
 
-    await this.membersRepository.create({
+    const member = await this.membersRepository.create({
       member: { connect: { id: user.id } },
       room: { connect: { id: data.roomId } },
       ...(data.access && { status: StatusMember.LOGGED }),
@@ -84,6 +84,7 @@ export class SignInMemberService {
 
     return {
       user,
+      member,
       room: roomExists,
     };
   }
