@@ -49,9 +49,11 @@ export class SignInAcceptMemberService {
       throw new UnauthorizedException(OWNER_ID_ROOM_INVALID);
     }
 
-    await this.membersRepository.create({
+    const memberCreated = await this.membersRepository.create({
       member: { connect: { id: data.userId } },
       room: { connect: { id: data.roomId } },
     });
+
+    return { member: memberCreated };
   }
 }
