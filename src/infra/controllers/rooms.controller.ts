@@ -28,12 +28,14 @@ import { SignInMemberService } from '@/application/use-cases/members/sign-in-mem
 import { SignInAcceptMemberService } from '@/application/use-cases/members/sign-in-accept-member.service';
 import { FindUniqueRoomService } from '@/application/use-cases/rooms/find-unique-room.service';
 import { SignOutEvent } from '../websockets/events/sign-out-member.event';
+import { VoteEvent } from '../websockets/events/vote-room.event';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
     private signInEvent: SignInEvent,
     private signOutEvent: SignOutEvent,
+    private voteEvent: VoteEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -125,9 +127,7 @@ export class RoomsController {
       roomId,
     });
 
-    console.log(member);
-
-    return member;
+    this.voteEvent.send(roomId, member);
   }
 
   @Post(':roomId/vote/clear')
