@@ -8,7 +8,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Room } from '@prisma/client';
+import { Room, StatusRoom } from '@prisma/client';
 
 interface DeleteUniqueRoomServiceExecuteProps {
   roomId: string;
@@ -32,6 +32,8 @@ export class DeleteUniqueRoomService {
     if (!userActionIsOwnerTheRoom)
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
 
-    return await this.roomsRepository.deleteUnique(roomId);
+    return await this.roomsRepository.update(roomId, {
+      status: StatusRoom.CLOSED,
+    });
   }
 }

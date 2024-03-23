@@ -14,7 +14,7 @@ export class FindUniqueRoomService {
 
   async execute(query: string): Promise<FindUniqueRoomUseCaseResponse> {
     if (isUUID(query)) {
-      const room = await this.roomsRepository.findById(query);
+      const room = await this.roomsRepository.findById(query, true);
 
       return { room };
     }

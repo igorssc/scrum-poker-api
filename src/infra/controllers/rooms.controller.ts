@@ -26,12 +26,14 @@ import { VoteMemberService } from '@/application/use-cases/members/vote-member.s
 import { ClearVotesMembersService } from '@/application/use-cases/members/clear-votes-members.service';
 import { SignInMemberService } from '@/application/use-cases/members/sign-in-member.service';
 import { SignInAcceptMemberService } from '@/application/use-cases/members/sign-in-accept-member.service';
+import { FindUniqueRoomService } from '@/application/use-cases/rooms/find-unique-room.service';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(
     private exampleEvent: ExampleEvent,
 
+    private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
     private createRoomService: CreateRoomService,
     private updateRoomService: UpdateRoomService,
@@ -46,6 +48,13 @@ export class RoomsController {
   @Get('/location')
   async findByLocation(@Query() query: FindRoomsByLocationDto) {
     const room = await this.findUniqueRoomByLocationService.execute(query);
+
+    return room;
+  }
+
+  @Get(':roomId')
+  async findUnique(@Param('roomId') roomId: string) {
+    const { room } = await this.findUniqueRoomService.execute(roomId);
 
     return room;
   }
@@ -67,12 +76,14 @@ export class RoomsController {
 
   @Post(':roomId/sign-in')
   async signIn(@Param('roomId') roomId: string, @Body() body: SignInRoomDto) {
-    await this.signInMemberService.execute({
+    const data = await this.signInMemberService.execute({
       roomId,
       userName: body.user_name,
       access: body.access,
       userId: body.user_id,
     });
+
+    return data;
   }
 
   @Post(':roomId/sign-in/accept')
@@ -91,7 +102,7 @@ export class RoomsController {
   @Post(':roomId/sign-out')
   async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {
     await this.signOutMemberService.execute({
-      memberId: body.room_id,
+      memberId: body.member_id,
       roomId,
       userActionId: body.user_action_id,
     });

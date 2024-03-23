@@ -16,11 +16,14 @@ export class PrismaRoomsRepository implements RoomsRepository {
     return roomCreated;
   }
 
-  async findById(id: string) {
+  async findById(id: string, includeMembers = false) {
     const room = await this.prisma.room.findUnique({
       where: {
         id,
         status: StatusRoom.OPEN,
+      },
+      include: {
+        members: includeMembers,
       },
     });
 

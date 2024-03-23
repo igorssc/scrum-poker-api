@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Member } from '@prisma/client';
+import { Prisma, Member, StatusMember } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import {
   DeleteMemberProps,
@@ -19,6 +19,7 @@ export class InMemoryMembersRepository implements MembersRepository {
       room_id: data.room.connect.id,
       created_at: new Date(),
       vote: null,
+      status: data.status || StatusMember.PENDING,
     };
 
     this.items.push(memberCreated);

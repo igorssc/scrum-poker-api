@@ -7,7 +7,7 @@ import {
 import { Member } from '@prisma/client';
 import {
   ROOM_NOT_FOUND,
-  USER_WITHOUT_PERMISSION,
+  USER_IS_NOT_IN_THE_ROOM,
 } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 
@@ -45,7 +45,7 @@ export class VoteMemberService {
         });
 
       if (!userActionIsInsideTheRoom)
-        throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+        throw new UnauthorizedException(USER_IS_NOT_IN_THE_ROOM);
     }
 
     const memberVoted = await this.membersRepository.update(

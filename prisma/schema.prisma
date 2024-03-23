@@ -12,6 +12,11 @@ enum StatusRoom {
   CLOSED
 }
 
+enum StatusMember {
+  PENDING
+  LOGGED
+}
+
 model User {
   id          String   @id @default(uuid())
   name        String
@@ -40,11 +45,12 @@ model Room {
 }
 
 model Member {
-  id         String   @id @default(uuid())
+  id         String       @id @default(uuid())
   member_id  String
   room_id    String
   vote       String?
-  created_at DateTime @default(now())
+  created_at DateTime     @default(now())
+  status     StatusMember @default(PENDING)
 
   member User @relation(fields: [member_id], references: [id], onDelete: Cascade)
   room   Room @relation(fields: [room_id], references: [id], onDelete: Cascade)
