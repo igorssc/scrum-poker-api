@@ -7,6 +7,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import {
   ROOM_NOT_FOUND,
+  USER_IS_NOT_IN_THE_ROOM,
   USER_WITHOUT_PERMISSION,
 } from '@/application/errors/errors.constants';
 
@@ -28,17 +29,24 @@ export class SignOutMemberService {
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
-    const userActionIsOwnerTheRoom = roomExists.owner_id !== data.userActionId;
+    const userActionIsOwnerTheRoom = roomExists.owner_id === data.userActionId;
 
-    if (!userActionIsOwnerTheRoom) {
-      const userActionIsInsideTheRoom =
+    const userActionIsEqualUserSignOut = data.memberId === data.userActionId;
+
+    if (!userActionIsOwnerTheRoom && !userActionIsEqualUserSignOut) {
+      throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+    }
+
+    if (!userActionIsEqualUserSignOut) {
+      const userIsInsideTheRoom =
         await this.membersRepository.findByMemberAndRoomId({
           memberId: data.memberId,
           roomId: data.roomId,
         });
 
-      if (!userActionIsInsideTheRoom)
-        throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+      if (!userIsInsideTheRoom) {
+        throw new BadRequestException(USER_IS_NOT_IN_THE_ROOM);
+      }
     }
 
     await this.membersRepository.deleteUnique(data);
