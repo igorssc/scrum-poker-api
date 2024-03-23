@@ -12,6 +12,8 @@ import {
   USER_NOT_FOUND,
 } from '@/application/errors/errors.constants';
 import { CreateUserService } from '../users/create-user.service';
+import { User } from '@prisma/client';
+import { UsersRepository } from '@/application/repositories/users.repository';
 
 interface SignInMemberServiceExecuteProps {
   userId?: string;
@@ -26,23 +28,30 @@ export class SignInMemberService {
     private createUserService: CreateUserService,
     private membersRepository: MembersRepository,
     private roomsRepository: RoomsRepository,
+    private usersRepository: UsersRepository,
   ) {}
 
   async execute(data: SignInMemberServiceExecuteProps) {
-    let userId = data.userId;
+    let user: User;
 
     if (data.userId) {
-      const user = await this.roomsRepository.findById(userId);
+      const userFound = await this.usersRepository.findById(data.userId);
 
-      if (!user) throw new BadRequestException(USER_NOT_FOUND);
+      if (!userFound) throw new BadRequestException(USER_NOT_FOUND);
+
+      if (userFound.name !== data.userName) {
+        await this.usersRepository.update(data.userId, { name: data.userName });
+      }
+
+      user = { ...userFound, name: data.userName };
     }
 
     if (!data.userId) {
-      const userCreated = await this.createUserService.execute({
+      const { user: userCreated } = await this.createUserService.execute({
         name: data.userName,
       });
 
-      userId = userCreated.user.id;
+      user = userCreated;
     }
 
     const roomExists = await this.roomsRepository.findById(data.roomId);
@@ -68,8 +77,13 @@ export class SignInMemberService {
     }
 
     await this.membersRepository.create({
-      member: { connect: { id: data.userId } },
+      member: { connect: { id: user.id } },
       room: { connect: { id: data.roomId } },
     });
+
+    return {
+      user,
+      room: roomExists,
+    };
   }
 }
