@@ -6,7 +6,7 @@ import { DeleteUniqueRoomService } from './delete-unique-room.service';
 import { StatusRoom } from '@prisma/client';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
-describe('Delete unique Room Use Case', () => {
+describe('Delete Unique Room Use Case', () => {
   let sut: DeleteUniqueRoomService;
   let roomsRepository: RoomsRepository;
 
