@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { WebSocketGateway } from '../gateways/events.gateway';
 import { WebSocketGatewayDecorator } from '@/infra/decorators/web-socket-gateway.decorator';
-import { Member } from '@prisma/client';
+import { Room } from '@prisma/client';
 
 @Injectable()
 @WebSocketGatewayDecorator()
-export class VoteEvent {
+export class UpdateRoomEvent {
   constructor(private webSocketGateway: WebSocketGateway) {}
 
-  send(roomId: string, data: Member) {
-    // data = Member include User
-
+  send(roomId: string, data: Room) {
     this.webSocketGateway.server.emit(roomId, {
-      type: 'vote-member',
-      data: { user: data },
+      type: 'update-room',
+      data: { room: data },
     });
   }
 }
