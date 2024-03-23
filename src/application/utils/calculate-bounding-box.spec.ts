@@ -22,9 +22,9 @@ describe('calculateBoundingBox function', () => {
 
     const expectedResult = {
       maxLat: 40.802793,
-      maxLng: -73.679391,
+      maxLng: -73.887274,
       minLat: 40.622807,
-      minLng: -74.332609,
+      minLng: -74.124726,
     };
 
     Object.keys(expectedResult).forEach((key) =>
@@ -48,9 +48,9 @@ describe('calculateBoundingBox function', () => {
 
     const expectedResult = {
       maxLat: 37.819896,
-      maxLng: -122.335469,
+      maxLng: -122.362473,
       minLat: 37.729904,
-      minLng: -122.503331,
+      minLng: -122.476327,
     };
 
     Object.keys(expectedResult).forEach((key) =>

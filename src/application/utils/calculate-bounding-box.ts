@@ -19,9 +19,9 @@ export const calculateBoundingBox = ({
   const maxLat = lat + radiusInKM / 111.12;
 
   const minLon =
-    lng - radiusInKM / Math.abs(Math.cos(DEGREES_TO_RADIANS(lng)) * 111.12);
+    lng - radiusInKM / Math.abs(Math.cos(DEGREES_TO_RADIANS(lat)) * 111.12);
   const maxLon =
-    lng + radiusInKM / Math.abs(Math.cos(DEGREES_TO_RADIANS(lng)) * 111.12);
+    lng + radiusInKM / Math.abs(Math.cos(DEGREES_TO_RADIANS(lat)) * 111.12);
 
   return {
     minLat: minLat,
