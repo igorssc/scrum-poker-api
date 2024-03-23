@@ -4,6 +4,7 @@ import { Room, StatusRoom } from '@prisma/client';
 import { CreateUserService } from '../users/create-user.service';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
+import { capitalizeInitials } from '@/application/utils/capitalize-initials';
 
 export interface CreateRoomUseCaseResponse {
   room: Room;
@@ -46,7 +47,7 @@ export class CreateRoomService {
     }
 
     const roomCreated = await this.roomsRepository.create({
-      name: data.name,
+      name: capitalizeInitials(data.name),
       owner: { connect: { id: userId } },
       status: StatusRoom.OPEN,
       lat: data.lat,

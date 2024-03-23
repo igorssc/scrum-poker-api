@@ -96,6 +96,21 @@ describe('Create Room Use Case', () => {
     expect(owner.name).toBe('John Doe');
   });
 
+  it('should be able to create room with a lower case', async () => {
+    const { room } = await sut.execute({
+      name: 'title of test',
+      userName: 'username of test',
+    });
+
+    expect(room.id).toEqual(expect.any(String));
+    expect(room.name).toEqual('Title Of Test');
+
+    const owner = await usersRepository.findById(room.owner_id);
+
+    expect(owner.id).toBe(room.owner_id);
+    expect(owner.name).toBe('Username Of Test');
+  });
+
   it('should be able to create a user with a lower case when creating room', async () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
