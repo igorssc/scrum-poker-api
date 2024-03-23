@@ -8,7 +8,7 @@ import { StatusRoom } from '@prisma/client';
 import { VoteMemberService } from './vote-member.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
-describe('Create Room Use Case', () => {
+describe('Vote Member Use Case', () => {
   let sut: VoteMemberService;
   let roomsRepository: RoomsRepository;
   let membersRepository: MembersRepository;

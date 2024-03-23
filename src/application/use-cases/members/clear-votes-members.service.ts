@@ -32,7 +32,7 @@ export class ClearVotesMembersService {
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
-    const userActionIsOwnerTheRoom = roomExists.owner_id !== data.userId;
+    const userActionIsOwnerTheRoom = roomExists.owner_id === data.userId;
 
     if (!userActionIsOwnerTheRoom) {
       const userActionIsInsideTheRoom =
