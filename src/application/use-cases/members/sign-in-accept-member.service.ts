@@ -32,8 +32,8 @@ export class SignInAcceptMemberService {
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
     const userActionIsInsideTheRoom =
-      await this.membersRepository.findByMemberAndRoomId({
-        memberId: data.userId,
+      await this.membersRepository.findByUserAndRoomId({
+        userId: data.userId,
         roomId: data.roomId,
       });
 

@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { SignInEvent } from '../websockets/events/sign-in-member';
+import { SignInEvent } from '../websockets/events/sign-in-member.event';
 import { CreateRoomDto } from '../dtos/rooms/create-room.dto';
 import { UpdateRoomDto } from '../dtos/rooms/update-room.dto';
 import { FindRoomsByLocationDto } from '../dtos/rooms/find-rooms-by-location.dto';
@@ -27,7 +27,7 @@ import { ClearVotesMembersService } from '@/application/use-cases/members/clear-
 import { SignInMemberService } from '@/application/use-cases/members/sign-in-member.service';
 import { SignInAcceptMemberService } from '@/application/use-cases/members/sign-in-accept-member.service';
 import { FindUniqueRoomService } from '@/application/use-cases/rooms/find-unique-room.service';
-import { SignOutEvent } from '../websockets/events/sign-out-member';
+import { SignOutEvent } from '../websockets/events/sign-out-member.event';
 
 @Controller('rooms')
 export class RoomsController {
@@ -108,22 +108,26 @@ export class RoomsController {
 
   @Post(':roomId/sign-out')
   async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {
-    await this.signOutMemberService.execute({
-      memberId: body.member_id,
+    const {} = await this.signOutMemberService.execute({
+      userId: body.user_id,
       roomId,
       userActionId: body.user_action_id,
     });
 
-    this.signOutEvent.send(roomId, body.member_id);
+    this.signOutEvent.send(roomId, body.user_id);
   }
 
   @Post(':roomId/vote')
   async vote(@Param('roomId') roomId: string, @Body() body: VoteRoomDto) {
-    await this.voteMemberService.execute({
+    const { member } = await this.voteMemberService.execute({
       userId: body.user_id,
       vote: body.vote,
       roomId,
     });
+
+    console.log(member);
+
+    return member;
   }
 
   @Post(':roomId/vote/clear')

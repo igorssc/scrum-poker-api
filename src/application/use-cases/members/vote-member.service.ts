@@ -39,8 +39,8 @@ export class VoteMemberService {
 
     if (!userActionIsOwnerTheRoom) {
       const userActionIsInsideTheRoom =
-        await this.membersRepository.findByMemberAndRoomId({
-          memberId: data.userId,
+        await this.membersRepository.findByUserAndRoomId({
+          userId: data.userId,
           roomId: data.roomId,
         });
 
@@ -48,14 +48,22 @@ export class VoteMemberService {
         throw new UnauthorizedException(USER_IS_NOT_IN_THE_ROOM);
     }
 
-    const memberVoted = await this.membersRepository.update(
+    await this.membersRepository.update(
       {
-        memberId: data.userId,
+        userId: data.userId,
         roomId: data.roomId,
       },
       { vote: data.vote },
     );
 
-    return { member: memberVoted };
+    const memberFound = await this.membersRepository.findByUserAndRoomId(
+      {
+        roomId: data.roomId,
+        userId: data.userId,
+      },
+      true,
+    );
+
+    return { member: memberFound };
   }
 }

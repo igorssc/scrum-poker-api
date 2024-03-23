@@ -42,22 +42,22 @@ describe('Sign Out Member Use Case', () => {
       room: { connect: { id: roomCreated.id } },
     });
 
-    const memberCreated = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberCreated = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(memberCreated.member_id).toBe('user-id-test');
+    expect(memberCreated.user_id).toBe('user-id-test');
     expect(memberCreated.room_id).toBe(roomCreated.id);
 
     await sut.execute({
-      memberId: 'user-id-test',
+      userId: 'user-id-test',
       roomId: roomCreated.id,
       userActionId: 'user-id-test',
     });
 
-    const memberFound = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberFound = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
@@ -79,22 +79,22 @@ describe('Sign Out Member Use Case', () => {
       room: { connect: { id: roomCreated.id } },
     });
 
-    const memberCreated = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberCreated = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(memberCreated.member_id).toBe('user-id-test');
+    expect(memberCreated.user_id).toBe('user-id-test');
     expect(memberCreated.room_id).toBe(roomCreated.id);
 
     await sut.execute({
-      memberId: 'user-id-test',
+      userId: 'user-id-test',
       roomId: roomCreated.id,
       userActionId: 'owner-id-test',
     });
 
-    const memberFound = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberFound = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
@@ -116,28 +116,28 @@ describe('Sign Out Member Use Case', () => {
       room: { connect: { id: roomCreated.id } },
     });
 
-    const memberCreated = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberCreated = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(memberCreated.member_id).toBe('user-id-test');
+    expect(memberCreated.user_id).toBe('user-id-test');
     expect(memberCreated.room_id).toBe(roomCreated.id);
 
     const signOut = sut.execute({
-      memberId: 'user-id-test',
+      userId: 'user-id-test',
       roomId: roomCreated.id,
       userActionId: 'other-user-id-test',
     });
 
     expect(signOut).rejects.toThrow(UnauthorizedException);
 
-    const memberFound = await membersRepository.findByMemberAndRoomId({
-      memberId: 'user-id-test',
+    const memberFound = await membersRepository.findByUserAndRoomId({
+      userId: 'user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(memberFound.member_id).toBe('user-id-test');
+    expect(memberFound.user_id).toBe('user-id-test');
     expect(memberFound.room_id).toBe(roomCreated.id);
   });
 
@@ -152,7 +152,7 @@ describe('Sign Out Member Use Case', () => {
     });
 
     const signOut = sut.execute({
-      memberId: 'user-id-test',
+      userId: 'user-id-test',
       roomId: roomCreated.id,
       userActionId: 'owner-id-test',
     });
@@ -162,7 +162,7 @@ describe('Sign Out Member Use Case', () => {
 
   it('should not be able to remove non-existent room', async () => {
     const signOut = sut.execute({
-      memberId: 'user-id-test',
+      userId: 'user-id-test',
       roomId: 'room-id-test',
       userActionId: 'owner-id-test',
     });

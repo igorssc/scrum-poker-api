@@ -44,15 +44,15 @@ describe('Sign In Accept Member Use Case', () => {
       ownerId: roomCreated.owner_id,
     });
 
-    expect(memberCreated.member_id).toBe('user-id-test');
+    expect(memberCreated.user_id).toBe('user-id-test');
     expect(memberCreated.room_id).toBe(roomCreated.id);
 
-    const memberFound = await membersRepository.findByMemberAndRoomId({
+    const memberFound = await membersRepository.findByUserAndRoomId({
       roomId: roomCreated.id,
-      memberId: memberCreated.member_id,
+      userId: memberCreated.user_id,
     });
 
-    expect(memberFound.member_id).toBe(memberCreated.member_id);
+    expect(memberFound.user_id).toBe(memberCreated.user_id);
     expect(memberFound.room_id).toBe(roomCreated.id);
     expect(memberFound.vote).toBeNull();
   });

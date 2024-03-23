@@ -57,28 +57,28 @@ describe('Clear Votes Member Use Case', () => {
       userId: 'first-user-id-test',
     });
 
-    const firstUser = await membersRepository.findByMemberAndRoomId({
-      memberId: 'first-user-id-test',
+    const firstUser = await membersRepository.findByUserAndRoomId({
+      userId: 'first-user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(firstUser.member_id).toBe('first-user-id-test');
+    expect(firstUser.user_id).toBe('first-user-id-test');
     expect(firstUser.vote).toBeNull();
 
-    const secondUser = await membersRepository.findByMemberAndRoomId({
-      memberId: 'second-user-id-test',
+    const secondUser = await membersRepository.findByUserAndRoomId({
+      userId: 'second-user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(secondUser.member_id).toBe('second-user-id-test');
+    expect(secondUser.user_id).toBe('second-user-id-test');
     expect(secondUser.vote).toBeNull();
 
-    const thirdUser = await membersRepository.findByMemberAndRoomId({
-      memberId: 'third-user-id-test',
+    const thirdUser = await membersRepository.findByUserAndRoomId({
+      userId: 'third-user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(thirdUser.member_id).toBe('third-user-id-test');
+    expect(thirdUser.user_id).toBe('third-user-id-test');
     expect(thirdUser.vote).toBeNull();
   });
 
@@ -102,12 +102,12 @@ describe('Clear Votes Member Use Case', () => {
       userId: 'user-id-test',
     });
 
-    const firstUser = await membersRepository.findByMemberAndRoomId({
-      memberId: 'first-user-id-test',
+    const firstUser = await membersRepository.findByUserAndRoomId({
+      userId: 'first-user-id-test',
       roomId: roomCreated.id,
     });
 
-    expect(firstUser.member_id).toBe('first-user-id-test');
+    expect(firstUser.user_id).toBe('first-user-id-test');
     expect(firstUser.vote).toBeNull();
   });
 

@@ -48,7 +48,7 @@ describe('Vote Member Use Case', () => {
       vote: 'vote-test',
     });
 
-    expect(member.member_id).toBe('user-id-test');
+    expect(member.user_id).toBe('user-id-test');
     expect(member.room_id).toBe(roomCreated.id);
     expect(member.vote).toBe('vote-test');
   });
@@ -74,7 +74,7 @@ describe('Vote Member Use Case', () => {
       vote: 'vote-test',
     });
 
-    expect(member.member_id).toBe('user-id-test');
+    expect(member.user_id).toBe('user-id-test');
     expect(member.room_id).toBe(roomCreated.id);
     expect(member.vote).toBe('vote-test');
   });

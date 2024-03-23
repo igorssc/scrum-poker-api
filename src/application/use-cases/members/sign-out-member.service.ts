@@ -13,7 +13,7 @@ import {
 
 interface SignOutMemberServiceExecuteProps {
   roomId: string;
-  memberId: string;
+  userId: string;
   userActionId: string;
 }
 
@@ -31,7 +31,7 @@ export class SignOutMemberService {
 
     const userActionIsOwnerTheRoom = roomExists.owner_id === data.userActionId;
 
-    const userActionIsEqualUserSignOut = data.memberId === data.userActionId;
+    const userActionIsEqualUserSignOut = data.userId === data.userActionId;
 
     if (!userActionIsOwnerTheRoom && !userActionIsEqualUserSignOut) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
@@ -39,8 +39,8 @@ export class SignOutMemberService {
 
     if (!userActionIsEqualUserSignOut) {
       const userIsInsideTheRoom =
-        await this.membersRepository.findByMemberAndRoomId({
-          memberId: data.memberId,
+        await this.membersRepository.findByUserAndRoomId({
+          userId: data.userId,
           roomId: data.roomId,
         });
 

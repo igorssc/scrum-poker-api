@@ -55,12 +55,12 @@ describe('Sign In Member Use Case', () => {
     expect(userCreated.id).toEqual(expect.any(String));
     expect(userCreated.name).toBe('John Doe');
 
-    const member = await membersRepository.findByMemberAndRoomId({
+    const member = await membersRepository.findByUserAndRoomId({
       roomId: roomCreated.id,
-      memberId: userCreated.id,
+      userId: userCreated.id,
     });
 
-    expect(member.member_id).toBe(userCreated.id);
+    expect(member.user_id).toBe(userCreated.id);
     expect(member.room_id).toBe(roomCreated.id);
     expect(member.vote).toBeNull();
   });
@@ -89,12 +89,12 @@ describe('Sign In Member Use Case', () => {
       userId: userCreated.id,
     });
 
-    const member = await membersRepository.findByMemberAndRoomId({
+    const member = await membersRepository.findByUserAndRoomId({
       roomId: roomCreated.id,
-      memberId: userCreated.id,
+      userId: userCreated.id,
     });
 
-    expect(member.member_id).toBe(userCreated.id);
+    expect(member.user_id).toBe(userCreated.id);
     expect(member.room_id).toBe(roomCreated.id);
     expect(member.vote).toBeNull();
   });
@@ -123,12 +123,12 @@ describe('Sign In Member Use Case', () => {
       userId: userCreated.id,
     });
 
-    const member = await membersRepository.findByMemberAndRoomId({
+    const member = await membersRepository.findByUserAndRoomId({
       roomId: roomCreated.id,
-      memberId: userCreated.id,
+      userId: userCreated.id,
     });
 
-    expect(member.member_id).toBe(userCreated.id);
+    expect(member.user_id).toBe(userCreated.id);
     expect(member.room_id).toBe(roomCreated.id);
     expect(member.vote).toBeNull();
 

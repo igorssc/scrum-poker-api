@@ -131,12 +131,12 @@ describe('Create Room Use Case', () => {
       userName: 'john doe',
     });
 
-    const member = await membersRepository.findByMemberAndRoomId({
-      memberId: room.owner_id,
+    const member = await membersRepository.findByUserAndRoomId({
+      userId: room.owner_id,
       roomId: room.id,
     });
 
-    expect(member.member_id).toBe(room.owner_id);
+    expect(member.user_id).toBe(room.owner_id);
     expect(member.room_id).toBe(room.id);
     expect(member.vote).toBeNull();
   });

@@ -36,8 +36,8 @@ export class ClearVotesMembersService {
 
     if (!userActionIsOwnerTheRoom) {
       const userActionIsInsideTheRoom =
-        await this.membersRepository.findByMemberAndRoomId({
-          memberId: data.userId,
+        await this.membersRepository.findByUserAndRoomId({
+          userId: data.userId,
           roomId: data.roomId,
         });
 

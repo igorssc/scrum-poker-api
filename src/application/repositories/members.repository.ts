@@ -1,17 +1,17 @@
 import { Prisma, Member } from '@prisma/client';
 
 export interface FindMemberByIdProps {
-  memberId: string;
+  userId: string;
   roomId: string;
 }
 
 export interface DeleteMemberProps {
-  memberId: string;
+  userId: string;
   roomId: string;
 }
 
 export interface UpdateProps {
-  memberId?: string;
+  userId?: string;
   roomId: string;
 }
 
@@ -23,7 +23,10 @@ export abstract class MembersRepository {
     member: Prisma.MemberUpdateInput,
   ) => Promise<Member>;
 
-  findByMemberAndRoomId: (props: FindMemberByIdProps) => Promise<Member | null>;
+  findByUserAndRoomId: (
+    props: FindMemberByIdProps,
+    inclueUser?: boolean,
+  ) => Promise<Member | null>;
 
   deleteUnique: (props: DeleteMemberProps) => Promise<Member>;
 }

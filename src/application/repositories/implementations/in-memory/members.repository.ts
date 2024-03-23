@@ -15,7 +15,7 @@ export class InMemoryMembersRepository implements MembersRepository {
   async create(data: Prisma.MemberCreateInput) {
     const memberCreated = {
       id: randomUUID(),
-      member_id: data.member.connect.id,
+      user_id: data.member.connect.id,
       room_id: data.room.connect.id,
       created_at: new Date(),
       vote: null,
@@ -27,10 +27,9 @@ export class InMemoryMembersRepository implements MembersRepository {
     return memberCreated;
   }
 
-  async findByMemberAndRoomId(props: FindMemberByIdProps) {
+  async findByUserAndRoomId(props: FindMemberByIdProps) {
     const member = this.items.find(
-      (item) =>
-        item.member_id === props.memberId && item.room_id === props.roomId,
+      (item) => item.user_id === props.userId && item.room_id === props.roomId,
     );
 
     if (!member) {
@@ -46,8 +45,7 @@ export class InMemoryMembersRepository implements MembersRepository {
 
   async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
     const memberIndex = this.items.findIndex(
-      (item) =>
-        item.member_id === props.memberId && item.room_id === props.roomId,
+      (item) => item.user_id === props.userId && item.room_id === props.roomId,
     );
 
     if (memberIndex < 0) {
@@ -59,9 +57,9 @@ export class InMemoryMembersRepository implements MembersRepository {
     return { ...this.items[memberIndex] };
   }
 
-  async deleteUnique({ memberId, roomId }: DeleteMemberProps) {
+  async deleteUnique({ userId, roomId }: DeleteMemberProps) {
     const memberIndex = this.items.findIndex(
-      (item) => item.member_id === memberId && item.room_id === roomId,
+      (item) => item.user_id === userId && item.room_id === roomId,
     );
 
     if (memberIndex < 0) {

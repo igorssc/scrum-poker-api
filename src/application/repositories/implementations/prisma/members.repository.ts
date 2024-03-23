@@ -20,12 +20,17 @@ export class PrismaMembersRepository implements MembersRepository {
     return memberCreated;
   }
 
-  async findByMemberAndRoomId(props: FindMemberByIdProps) {
+  async findByUserAndRoomId(props: FindMemberByIdProps, includeUser = false) {
     const member = await this.prisma.member.findFirst({
       where: {
-        member_id: props.memberId,
+        user_id: props.userId,
         room_id: props.roomId,
       },
+      ...(includeUser && {
+        include: {
+          member: { select: { name: true, id: true, created_at: true } },
+        },
+      }),
     });
 
     return member;
@@ -34,7 +39,7 @@ export class PrismaMembersRepository implements MembersRepository {
   async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
     const data = await this.prisma.member.updateMany({
       where: {
-        member_id: props.memberId,
+        user_id: props.userId,
         room_id: props.roomId,
       },
       data: member,
@@ -43,9 +48,9 @@ export class PrismaMembersRepository implements MembersRepository {
     return data[0];
   }
 
-  async deleteUnique({ memberId, roomId }: DeleteMemberProps) {
+  async deleteUnique({ userId, roomId }: DeleteMemberProps) {
     const memberDeleted = await this.prisma.member.deleteMany({
-      where: { room_id: roomId, member_id: memberId },
+      where: { room_id: roomId, user_id: userId },
     });
 
     return memberDeleted[0];

@@ -22,9 +22,19 @@ export class PrismaRoomsRepository implements RoomsRepository {
         id,
         status: StatusRoom.OPEN,
       },
-      include: {
-        members: includeMembers,
-      },
+      ...(includeMembers && {
+        include: {
+          members: {
+            select: {
+              member: { select: { name: true, id: true, created_at: true } },
+              vote: true,
+              status: true,
+              created_at: true,
+              id: true,
+            },
+          },
+        },
+      }),
     });
 
     return room;

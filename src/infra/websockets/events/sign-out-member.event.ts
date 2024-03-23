@@ -7,10 +7,10 @@ import { WebSocketGatewayDecorator } from '@/infra/decorators/web-socket-gateway
 export class SignOutEvent {
   constructor(private webSocketGateway: WebSocketGateway) {}
 
-  send(roomId: string, memberId: string) {
+  send(roomId: string, userId: string) {
     this.webSocketGateway.server.emit(roomId, {
       type: 'sign-out',
-      data: { user: { id: memberId } },
+      data: { user: { id: userId } },
     });
   }
 }
