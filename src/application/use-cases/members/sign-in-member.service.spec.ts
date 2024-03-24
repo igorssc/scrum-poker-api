@@ -42,6 +42,7 @@ describe('Sign In Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const { user } = await sut.execute({
@@ -73,6 +74,7 @@ describe('Sign In Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const userCreated = await usersRepository.create({
@@ -107,6 +109,7 @@ describe('Sign In Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const userCreated = await usersRepository.create({
@@ -145,6 +148,7 @@ describe('Sign In Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const userCreated = await usersRepository.create({
@@ -188,6 +192,7 @@ describe('Sign In Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const signInMember = sut.execute({

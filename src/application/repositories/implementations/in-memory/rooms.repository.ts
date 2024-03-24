@@ -19,6 +19,7 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       lng: data.lng,
       private: data.private,
       access: randomUUID(),
+      theme: data.theme,
     };
 
     this.items.push(roomCreated);

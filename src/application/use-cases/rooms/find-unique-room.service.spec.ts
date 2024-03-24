@@ -31,6 +31,7 @@ describe('Find Unique Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const { room: roomFound } = await sut.execute(roomCreated.id);

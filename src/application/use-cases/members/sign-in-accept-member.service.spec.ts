@@ -35,6 +35,7 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -67,6 +68,7 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -103,6 +105,7 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -128,6 +131,7 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({

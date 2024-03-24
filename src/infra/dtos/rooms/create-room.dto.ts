@@ -16,6 +16,7 @@ import {
   LONGITUDE_NUMBER_ERROR_MESSAGE,
   NAME_ERROR_MESSAGE,
   PRIVATE_ROOM_ERROR_MESSAGE,
+  THEME_ERROR_MESSAGE,
   USER_ID_ERROR_MESSAGE,
   USER_NAME_ERROR_MESSAGE,
 } from '@/application/errors/validations.constants';
@@ -23,6 +24,9 @@ import {
 export abstract class CreateRoomDto {
   @IsString({ message: NAME_ERROR_MESSAGE })
   name: string;
+
+  @IsString({ message: THEME_ERROR_MESSAGE })
+  theme: string;
 
   @IsOptional()
   @IsString({ message: USER_ID_ERROR_MESSAGE })

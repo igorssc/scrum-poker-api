@@ -35,6 +35,7 @@ describe('Vote Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -61,6 +62,7 @@ describe('Vote Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -87,6 +89,7 @@ describe('Vote Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const voteCreated = sut.execute({

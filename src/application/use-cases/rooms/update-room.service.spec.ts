@@ -35,6 +35,7 @@ describe('Update Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -65,6 +66,7 @@ describe('Update Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -95,6 +97,7 @@ describe('Update Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomUpdated = sut.execute(

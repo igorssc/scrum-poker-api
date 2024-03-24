@@ -35,6 +35,7 @@ describe('Clear Votes Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -90,6 +91,7 @@ describe('Clear Votes Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -119,6 +121,7 @@ describe('Clear Votes Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const cleanVotes = sut.execute({

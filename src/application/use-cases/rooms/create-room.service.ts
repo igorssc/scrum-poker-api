@@ -17,6 +17,7 @@ interface CreateRoomServiceExecuteProps {
   lat?: number;
   lng?: number;
   private?: boolean;
+  theme: string;
 }
 
 @Injectable()
@@ -53,6 +54,7 @@ export class CreateRoomService {
       lat: data.lat,
       lng: data.lng,
       private: !!data.private,
+      theme: data.theme,
     });
 
     await this.membersRepository.create({

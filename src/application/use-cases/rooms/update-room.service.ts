@@ -33,7 +33,7 @@ export class UpdateRoomService {
     props: UpdateRoomServiceExecuteProps,
     data: UpdateRoomDto,
   ): Promise<UpdateRoomUseCaseResponse> {
-    const { name, lat, lng, private: privateRoom } = data;
+    const { name, lat, lng, private: privateRoom, theme } = data;
     const { roomId, userId } = props;
 
     const roomExists = await this.roomsRepository.findById(roomId);
@@ -52,6 +52,7 @@ export class UpdateRoomService {
       name: capitalizeInitials(name),
       lat,
       lng,
+      theme,
       private: privateRoom,
     });
 

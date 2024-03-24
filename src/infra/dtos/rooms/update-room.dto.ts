@@ -16,12 +16,17 @@ import {
   LONGITUDE_NUMBER_ERROR_MESSAGE,
   NAME_ERROR_MESSAGE,
   PRIVATE_ROOM_ERROR_MESSAGE,
+  THEME_ERROR_MESSAGE,
 } from '@/application/errors/validations.constants';
 
 export abstract class UpdateRoomDto {
   @IsOptional()
   @IsString({ message: NAME_ERROR_MESSAGE })
-  name: string;
+  name?: string;
+
+  @IsOptional()
+  @IsString({ message: THEME_ERROR_MESSAGE })
+  theme?: string;
 
   @IsOptional()
   @IsNumber({}, { message: LATITUDE_NUMBER_ERROR_MESSAGE })

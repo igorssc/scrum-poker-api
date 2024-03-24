@@ -34,6 +34,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     await roomsRepository.create({
@@ -43,6 +44,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomsFound = await sut.execute({
@@ -77,6 +79,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomsFound = await sut.execute({
@@ -111,6 +114,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomsFound = await sut.execute({
@@ -145,6 +149,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomsFound = await sut.execute({
@@ -179,6 +184,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomsFound = await sut.execute({
@@ -217,6 +223,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const totalCountRoomsAfterCreation = await roomsRepository.totalCount();
@@ -254,6 +261,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const totalCountRoomsAfterCreation = await roomsRepository.totalCount();
@@ -291,6 +299,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const totalCountRoomsAfterCreation = await roomsRepository.totalCount();
@@ -328,6 +337,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const totalCountRoomsAfterCreation = await roomsRepository.totalCount();
@@ -365,6 +375,7 @@ describe('Find All Rooms By Location Use Case', () => {
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       private: false,
+      theme: 'theme-test',
     });
 
     const totalCountRoomsAfterCreation = await roomsRepository.totalCount();

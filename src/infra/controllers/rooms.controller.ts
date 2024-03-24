@@ -80,6 +80,7 @@ export class RoomsController {
       lat: body.lat,
       lng: body.lng,
       private: body.private,
+      theme: body.theme,
       userId: body.user_id,
     });
 

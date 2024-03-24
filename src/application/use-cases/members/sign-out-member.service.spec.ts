@@ -35,6 +35,7 @@ describe('Sign Out Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -72,6 +73,7 @@ describe('Sign Out Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -109,6 +111,7 @@ describe('Sign Out Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     await membersRepository.create({
@@ -149,6 +152,7 @@ describe('Sign Out Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const signOut = sut.execute({

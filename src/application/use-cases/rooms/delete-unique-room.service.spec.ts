@@ -30,6 +30,7 @@ describe('Delete Unique Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomDeleted = await sut.execute({
@@ -52,6 +53,7 @@ describe('Delete Unique Room Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+      theme: 'theme-test',
     });
 
     const roomDeleted = sut.execute({

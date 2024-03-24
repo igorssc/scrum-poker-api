@@ -3,6 +3,8 @@ export const PRIVATE_ROOM_ERROR_MESSAGE =
 
 export const NAME_ERROR_MESSAGE = 'O nome deve ser uma string.';
 
+export const THEME_ERROR_MESSAGE = 'O tema deve ser uma string.';
+
 export const ACCESS_ROOM_ERROR_MESSAGE =
   'A chave de acesso direto deve ser uma string.';
 
