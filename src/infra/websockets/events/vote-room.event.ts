@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { WebSocketGateway } from '../gateways/events.gateway';
 import { WebSocketGatewayDecorator } from '@/infra/decorators/web-socket-gateway.decorator';
 import { Member } from '@prisma/client';
+import { EventsEnum } from '@/infra/enums/events.enum';
 
 @Injectable()
 @WebSocketGatewayDecorator()
@@ -12,7 +13,7 @@ export class VoteEvent {
     // data = Member include User
 
     this.webSocketGateway.server.emit(roomId, {
-      type: 'vote-member',
+      type: EventsEnum.VOTE_MEMBER,
       data: { user: data },
     });
   }
