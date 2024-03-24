@@ -16,7 +16,10 @@ export interface UpdateProps {
 }
 
 export abstract class MembersRepository {
-  create: (member: Prisma.MemberCreateInput) => Promise<Member>;
+  create: (
+    member: Prisma.MemberCreateInput,
+    includeUser?: boolean,
+  ) => Promise<Member>;
 
   update: (
     props: UpdateProps,
@@ -25,7 +28,7 @@ export abstract class MembersRepository {
 
   findByUserAndRoomId: (
     props: FindMemberByIdProps,
-    inclueUser?: boolean,
+    includeUser?: boolean,
   ) => Promise<Member | null>;
 
   deleteUnique: (props: DeleteMemberProps) => Promise<Member>;

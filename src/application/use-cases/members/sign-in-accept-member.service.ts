@@ -11,6 +11,7 @@ import {
   ROOM_NOT_FOUND,
   USER_IS_ALREADY_IN_THE_ROOM,
 } from '@/application/errors/errors.constants';
+import { StatusMember } from '@prisma/client';
 
 interface SignInAcceptMemberServiceExecuteProps {
   userId: string;
@@ -37,7 +38,10 @@ export class SignInAcceptMemberService {
         roomId: data.roomId,
       });
 
-    if (userActionIsInsideTheRoom) {
+    if (
+      userActionIsInsideTheRoom &&
+      userActionIsInsideTheRoom.status === StatusMember.LOGGED
+    ) {
       throw new UnauthorizedException(USER_IS_ALREADY_IN_THE_ROOM);
     }
 
@@ -49,11 +53,18 @@ export class SignInAcceptMemberService {
       throw new UnauthorizedException(OWNER_ID_ROOM_INVALID);
     }
 
-    const memberCreated = await this.membersRepository.create({
-      member: { connect: { id: data.userId } },
-      room: { connect: { id: data.roomId } },
+    await this.membersRepository.update(
+      { roomId: data.roomId, userId: data.userId },
+      {
+        status: StatusMember.LOGGED,
+      },
+    );
+
+    const memberLogged = await this.membersRepository.findByUserAndRoomId({
+      userId: data.userId,
+      roomId: data.roomId,
     });
 
-    return { member: memberCreated };
+    return { member: memberLogged };
   }
 }

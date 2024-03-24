@@ -12,9 +12,14 @@ import {
 export class PrismaMembersRepository implements MembersRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(member: Prisma.MemberCreateInput) {
+  async create(member: Prisma.MemberCreateInput, includeUser = false) {
     const memberCreated = await this.prisma.member.create({
       data: { ...member },
+      ...(includeUser && {
+        include: {
+          member: { select: { name: true, id: true, created_at: true } },
+        },
+      }),
     });
 
     return memberCreated;

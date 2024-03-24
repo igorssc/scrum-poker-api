@@ -30,6 +30,7 @@ import { FindUniqueRoomService } from '@/application/use-cases/rooms/find-unique
 import { SignOutEvent } from '../websockets/events/sign-out-member.event';
 import { VoteEvent } from '../websockets/events/vote-room.event';
 import { UpdateRoomEvent } from '../websockets/events/update-room.event';
+import { SignInAcceptEvent } from '../websockets/events/sign-in-accept-member.event';
 
 @Controller('rooms')
 export class RoomsController {
@@ -38,6 +39,7 @@ export class RoomsController {
     private signOutEvent: SignOutEvent,
     private voteEvent: VoteEvent,
     private updateRoomEvent: UpdateRoomEvent,
+    private signInAcceptEvent: SignInAcceptEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -89,10 +91,7 @@ export class RoomsController {
       userId: body.user_id,
     });
 
-    this.signInEvent.send(data.room.id, {
-      user: data.user,
-      member: data.member,
-    });
+    this.signInEvent.send(data.room.id, data.member);
 
     return data;
   }
@@ -102,12 +101,14 @@ export class RoomsController {
     @Param('roomId') roomId: string,
     @Body() body: SignInRoomAcceptDto,
   ) {
-    await this.signInAcceptMemberService.execute({
+    const data = await this.signInAcceptMemberService.execute({
       roomId,
       ownerId: body.owner_id,
       access: body.access,
       userId: body.user_id,
     });
+
+    this.signInAcceptEvent.send(roomId, data.member);
   }
 
   @Post(':roomId/sign-out')

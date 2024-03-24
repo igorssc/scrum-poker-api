@@ -4,6 +4,7 @@ import { SignInEvent } from './events/sign-in-member.event';
 import { SignOutEvent } from './events/sign-out-member.event';
 import { VoteEvent } from './events/vote-room.event';
 import { UpdateRoomEvent } from './events/update-room.event';
+import { SignInAcceptEvent } from './events/sign-in-accept-member.event';
 
 @Module({
   providers: [
@@ -12,7 +13,14 @@ import { UpdateRoomEvent } from './events/update-room.event';
     SignOutEvent,
     VoteEvent,
     UpdateRoomEvent,
+    SignInAcceptEvent,
   ],
-  exports: [SignInEvent, SignOutEvent, VoteEvent, UpdateRoomEvent],
+  exports: [
+    SignInEvent,
+    SignOutEvent,
+    VoteEvent,
+    UpdateRoomEvent,
+    SignInAcceptEvent,
+  ],
 })
 export class WebSocketModule {}
