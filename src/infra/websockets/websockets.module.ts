@@ -7,6 +7,7 @@ import { UpdateRoomEvent } from './events/update-room.event';
 import { SignInAcceptEvent } from './events/sign-in-accept-member.event';
 import { UpdateUserEvent } from './events/update-user.event';
 import { ClearVotesEvent } from './events/clear-votes-room.event';
+import { DeleteRoomEvent } from './events/delete-room.event';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { ClearVotesEvent } from './events/clear-votes-room.event';
     SignInAcceptEvent,
     UpdateUserEvent,
     ClearVotesEvent,
+    DeleteRoomEvent,
   ],
   exports: [
     SignInEvent,
@@ -27,6 +29,7 @@ import { ClearVotesEvent } from './events/clear-votes-room.event';
     SignInAcceptEvent,
     UpdateUserEvent,
     ClearVotesEvent,
+    DeleteRoomEvent,
   ],
 })
 export class WebSocketModule {}

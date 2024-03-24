@@ -32,6 +32,7 @@ import { VoteEvent } from '../websockets/events/vote-room.event';
 import { UpdateRoomEvent } from '../websockets/events/update-room.event';
 import { SignInAcceptEvent } from '../websockets/events/sign-in-accept-member.event';
 import { ClearVotesEvent } from '../websockets/events/clear-votes-room.event';
+import { DeleteRoomEvent } from '../websockets/events/delete-room.event';
 
 @Controller('rooms')
 export class RoomsController {
@@ -42,6 +43,7 @@ export class RoomsController {
     private updateRoomEvent: UpdateRoomEvent,
     private signInAcceptEvent: SignInAcceptEvent,
     private clearVotesEvent: ClearVotesEvent,
+    private deleteRoomEvent: DeleteRoomEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -170,5 +172,7 @@ export class RoomsController {
     @Query('user_id') userId: string,
   ) {
     await this.deleteUniqueRoomService.execute({ roomId, userId });
+
+    this.deleteRoomEvent.send(roomId);
   }
 }
