@@ -37,6 +37,11 @@ describe('Sign In Accept Member Use Case', () => {
       private: false,
     });
 
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
     const { member: memberCreated } = await sut.execute({
       roomId: roomCreated.id,
       userId: 'user-id-test',
@@ -44,12 +49,9 @@ describe('Sign In Accept Member Use Case', () => {
       ownerId: roomCreated.owner_id,
     });
 
-    expect(memberCreated.user_id).toBe('user-id-test');
-    expect(memberCreated.room_id).toBe(roomCreated.id);
-
     const memberFound = await membersRepository.findByUserAndRoomId({
       roomId: roomCreated.id,
-      userId: memberCreated.user_id,
+      userId: 'user-id-test',
     });
 
     expect(memberFound.user_id).toBe(memberCreated.user_id);
@@ -65,6 +67,11 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
     });
 
     const memberCreated = sut.execute({
@@ -121,6 +128,11 @@ describe('Sign In Accept Member Use Case', () => {
       lat: null,
       lng: null,
       private: false,
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
     });
 
     const memberCreated = sut.execute({

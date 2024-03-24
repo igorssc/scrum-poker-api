@@ -10,6 +10,7 @@ import {
   OWNER_ID_ROOM_INVALID,
   ROOM_NOT_FOUND,
   USER_IS_ALREADY_IN_THE_ROOM,
+  USER_IS_NOT_IN_THE_ROOM,
 } from '@/application/errors/errors.constants';
 import { StatusMember } from '@prisma/client';
 
@@ -37,6 +38,10 @@ export class SignInAcceptMemberService {
         userId: data.userId,
         roomId: data.roomId,
       });
+
+    if (!userActionIsInsideTheRoom) {
+      throw new BadRequestException(USER_IS_NOT_IN_THE_ROOM);
+    }
 
     if (
       userActionIsInsideTheRoom &&
