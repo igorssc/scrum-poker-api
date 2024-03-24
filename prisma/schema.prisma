@@ -18,11 +18,11 @@ enum StatusMember {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  name        String
-  created_at  DateTime @default(now())
-  rooms_owner Room[]
-  rooms       Member[]
+  id         String   @id @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+  rooms      Room[]
+  members    Member[]
 
   @@map("users")
 }

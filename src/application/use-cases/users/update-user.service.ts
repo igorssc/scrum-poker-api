@@ -1,15 +1,17 @@
 import { UsersRepository } from '@/application/repositories/users.repository';
 import { capitalizeInitials } from '@/application/utils/capitalize-initials';
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Room, User } from '@prisma/client';
 
 interface UpdateUserUseCaseResponse {
-  user: User;
+  user: UserWithRooms;
 }
 
 interface UpdateUserDataProps {
   name: string;
 }
+
+type UserWithRooms = User & { rooms: Room[] };
 
 @Injectable()
 export class UpdateUserService {
@@ -23,6 +25,11 @@ export class UpdateUserService {
       name: capitalizeInitials(data.name),
     });
 
-    return { user: userUpdated };
+    const userFound = (await this.usersRepository.findById(
+      userUpdated.id,
+      true,
+    )) as UserWithRooms;
+
+    return { user: userFound };
   }
 }

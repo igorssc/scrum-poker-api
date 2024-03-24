@@ -7,7 +7,7 @@ export abstract class UsersRepository {
 
   update: (userId: string, user: Prisma.UserUpdateInput) => Promise<User>;
 
-  findById: (id: string) => Promise<User | null>;
+  findById: (id: string, includeRoom?: boolean) => Promise<User | null>;
 
   deleteUnique: (userId: string) => Promise<User>;
 }

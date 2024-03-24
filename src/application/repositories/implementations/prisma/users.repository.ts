@@ -15,11 +15,16 @@ export class PrismaUsersRepository implements UsersRepository {
     return userCreated;
   }
 
-  async findById(id: string) {
+  async findById(id: string, includeRoom = false) {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
+      ...(includeRoom && {
+        include: {
+          rooms: true,
+        },
+      }),
     });
 
     return user;
