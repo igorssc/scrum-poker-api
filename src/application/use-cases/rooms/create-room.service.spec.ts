@@ -7,7 +7,6 @@ import { UsersRepository } from '@/application/repositories/users.repository';
 import { InMemoryUsersRepository } from '@/application/repositories/implementations/in-memory/users.repository';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
-import { CreateUserService } from '../users/create-user.service';
 import { BadRequestException } from '@nestjs/common';
 
 describe('Create Room Use Case', () => {
@@ -19,7 +18,6 @@ describe('Create Room Use Case', () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         CreateRoomService,
-        CreateUserService,
         { provide: RoomsRepository, useClass: InMemoryRoomsRepository },
         { provide: UsersRepository, useClass: InMemoryUsersRepository },
         { provide: MembersRepository, useClass: InMemoryMembersRepository },

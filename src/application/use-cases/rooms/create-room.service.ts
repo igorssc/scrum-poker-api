@@ -1,10 +1,10 @@
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Room, StatusRoom } from '@prisma/client';
-import { CreateUserService } from '../users/create-user.service';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { capitalizeInitials } from '@/application/utils/capitalize-initials';
+import { UsersRepository } from '@/application/repositories/users.repository';
 
 export interface CreateRoomUseCaseResponse {
   room: Room;
@@ -23,7 +23,7 @@ interface CreateRoomServiceExecuteProps {
 export class CreateRoomService {
   constructor(
     private roomsRepository: RoomsRepository,
-    private createUserService: CreateUserService,
+    private usersRepository: UsersRepository,
     private membersRepository: MembersRepository,
   ) {}
 
@@ -39,11 +39,11 @@ export class CreateRoomService {
     }
 
     if (!data.userId) {
-      const userCreated = await this.createUserService.execute({
-        name: data.userName,
+      const userCreated = await this.usersRepository.create({
+        name: capitalizeInitials(data.userName),
       });
 
-      userId = userCreated.user.id;
+      userId = userCreated.id;
     }
 
     const roomCreated = await this.roomsRepository.create({
