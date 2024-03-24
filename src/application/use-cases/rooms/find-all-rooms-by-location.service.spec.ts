@@ -36,13 +36,22 @@ describe('Find All Rooms By Location Use Case', () => {
       private: false,
     });
 
+    await roomsRepository.create({
+      name: '0000 0000 0002',
+      owner: { connect: { id: 'user-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: newYorkLocation.lat,
+      lng: newYorkLocation.lng,
+      private: false,
+    });
+
     const roomsFound = await sut.execute({
       lat: newYorkLocation.lat,
       lng: newYorkLocation.lng,
       max_distance: 100,
     });
 
-    expect(roomsFound).toHaveLength(1);
+    expect(roomsFound).toHaveLength(2);
     expect(roomsFound[0].name).toEqual('0000 0000 0001');
     expect(roomsFound[0].lat).toEqual(newYorkLocation.lat);
     expect(roomsFound[0].lng).toEqual(newYorkLocation.lng);
