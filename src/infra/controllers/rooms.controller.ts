@@ -31,6 +31,7 @@ import { SignOutEvent } from '../websockets/events/sign-out-member.event';
 import { VoteEvent } from '../websockets/events/vote-room.event';
 import { UpdateRoomEvent } from '../websockets/events/update-room.event';
 import { SignInAcceptEvent } from '../websockets/events/sign-in-accept-member.event';
+import { ClearVotesEvent } from '../websockets/events/clear-votes-room.event';
 
 @Controller('rooms')
 export class RoomsController {
@@ -40,6 +41,7 @@ export class RoomsController {
     private voteEvent: VoteEvent,
     private updateRoomEvent: UpdateRoomEvent,
     private signInAcceptEvent: SignInAcceptEvent,
+    private clearVotesEvent: ClearVotesEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -142,6 +144,8 @@ export class RoomsController {
       userId,
       roomId,
     });
+
+    this.clearVotesEvent.send(roomId);
   }
 
   @Patch(':roomId')
