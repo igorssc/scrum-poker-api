@@ -76,7 +76,8 @@ export class SignInMemberService {
       {
         member: { connect: { id: user.id } },
         room: { connect: { id: data.roomId } },
-        ...(data.access && { status: StatusMember.LOGGED }),
+        ...(!roomExists.private &&
+          data.access && { status: StatusMember.LOGGED }),
       },
       true,
     );
