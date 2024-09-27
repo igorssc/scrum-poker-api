@@ -33,6 +33,9 @@ import { UpdateRoomEvent } from '../websockets/events/update-room.event';
 import { SignInAcceptEvent } from '../websockets/events/sign-in-accept-member.event';
 import { ClearVotesEvent } from '../websockets/events/clear-votes-room.event';
 import { DeleteRoomEvent } from '../websockets/events/delete-room.event';
+import { SignInRoomRefuseDto } from '../dtos/rooms/sign-in-room-refuse.dto';
+import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.event';
+import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -42,6 +45,7 @@ export class RoomsController {
     private voteEvent: VoteEvent,
     private updateRoomEvent: UpdateRoomEvent,
     private signInAcceptEvent: SignInAcceptEvent,
+    private signInRefuseEvent: SignInRefuseEvent,
     private clearVotesEvent: ClearVotesEvent,
     private deleteRoomEvent: DeleteRoomEvent,
 
@@ -55,6 +59,7 @@ export class RoomsController {
     private clearVotesMembersService: ClearVotesMembersService,
     private signInMemberService: SignInMemberService,
     private signInAcceptMemberService: SignInAcceptMemberService,
+    private signInRefuseMemberService: SignInRefuseMemberService,
   ) {}
 
   @Get('/location')
@@ -116,9 +121,24 @@ export class RoomsController {
     this.signInAcceptEvent.send(roomId, data.member);
   }
 
+  @Post(':roomId/sign-in/refuse')
+  async signInRefuse(
+    @Param('roomId') roomId: string,
+    @Body() body: SignInRoomRefuseDto,
+  ) {
+    const data = await this.signInRefuseMemberService.execute({
+      roomId,
+      ownerId: body.owner_id,
+      access: body.access,
+      userId: body.user_id,
+    });
+
+    this.signInRefuseEvent.send(roomId, data.member);
+  }
+
   @Post(':roomId/sign-out')
   async signOut(@Param('roomId') roomId: string, @Body() body: SignOutRoomDto) {
-    const {} = await this.signOutMemberService.execute({
+    await this.signOutMemberService.execute({
       userId: body.user_id,
       roomId,
       userActionId: body.user_action_id,

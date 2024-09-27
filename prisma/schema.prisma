@@ -15,6 +15,7 @@ enum StatusRoom {
 enum StatusMember {
   PENDING
   LOGGED
+  REFUSED
 }
 
 model User {
