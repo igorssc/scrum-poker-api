@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 networks:
   app_tier:
@@ -7,22 +7,22 @@ networks:
 services:
   prisma_postgres:
     container_name: scrum_poker_postgres
-    image: bitnami/postgresql
+    image: postgres:16-alpine
     restart: on-failure
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${POSTGRES_PORT:-5432}:5432
     volumes:
       - prisma_postgres:/var/lib/postgresql/data
     env_file:
       - .env
     environment:
-      - POSTGRESQL_USERNAME=${POSTGRES_USERNAME}
-      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRESQL_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
     networks:
       - app_tier
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,12 +34,12 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - ${APP_PORT}:3000
+      - ${APP_PORT:-3000}:3000
     env_file:
       - .env
     environment:
-      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
-    command: ash -c "npx prisma migrate dev && npm i && npm run start:dev"
+      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
+    command: ash -c "npx prisma migrate dev && npm install && npm run start:dev"
     networks:
       - app_tier
     healthcheck:
@@ -56,20 +56,22 @@ services:
 
   prisma_studio:
     container_name: scrum_poker_studio
-    image: timothyjmiller/prisma-studio
+    image: node:20-alpine
     restart: on-failure
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: ["npx", "prisma", "studio"]
     ports:
-      - ${PRISMA_STUDIO_PORT}:5555
+      - ${PRISMA_STUDIO_PORT:-5555}:5555
     env_file:
       - .env
     environment:
-      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
     networks:
       - app_tier
     depends_on:
       prisma_postgres:
-        condition: service_healthy
-      app:
         condition: service_healthy
 
 volumes:
