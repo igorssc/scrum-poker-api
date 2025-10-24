@@ -1,6 +1,6 @@
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Room, StatusRoom } from '@prisma/client';
+import { Room, StatusMember, StatusRoom } from '@prisma/client';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { capitalizeInitials } from '@/application/utils/capitalize-initials';
@@ -60,6 +60,7 @@ export class CreateRoomService {
     await this.membersRepository.create({
       member: { connect: { id: userId } },
       room: { connect: { id: roomCreated.id } },
+      status: StatusMember.LOGGED
     });
 
     return { room: roomCreated };
