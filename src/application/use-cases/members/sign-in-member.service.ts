@@ -38,6 +38,14 @@ export class SignInMemberService {
 
     if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
 
+    if (!data.userId) {
+      const { user: userCreated } = await this.createUserService.execute({
+        name: data.userName,
+      });
+
+      user = userCreated;
+    }
+
     if (data.userId) {
       const userFound = await this.usersRepository.findById(data.userId);
 
@@ -58,14 +66,6 @@ export class SignInMemberService {
       }
 
       user = { ...userFound, name: data.userName };
-    }
-
-    if (!data.userId) {
-      const { user: userCreated } = await this.createUserService.execute({
-        name: data.userName,
-      });
-
-      user = userCreated;
     }
 
     if (data.access && roomExists.access !== data.access) {
