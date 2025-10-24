@@ -1,6 +1,4 @@
-FROM node:18-alpine
-
-RUN npm install -g pnpm
+FROM node:25-alpine
 
 WORKDIR /app
 
@@ -8,8 +6,8 @@ COPY package.json ./
 
 COPY . .
 
-RUN pnpm install
+RUN npm install
 
 EXPOSE 3000
 
-CMD ["pnpm", "start:dev"]
+CMD ["npm", "run", "start:dev"]
