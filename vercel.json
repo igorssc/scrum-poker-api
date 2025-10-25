@@ -4,6 +4,7 @@
     { "src": "dist/main.js", "use": "@vercel/node" }
   ],
   "outputDirectory": "dist",
+  "buildCommand": "npm install && npm run build",
   "routes": [
     { "src": "/(.*)", "dest": "dist/main.js" }
   ],
