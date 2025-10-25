@@ -2,6 +2,7 @@ import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Member } from '@prisma/client';
@@ -33,7 +34,7 @@ export class VoteMemberService {
   ): Promise<VoteMemberUseCaseResponse> {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
-    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
 
     const userActionIsOwnerTheRoom = roomExists.owner_id === data.userId;
 

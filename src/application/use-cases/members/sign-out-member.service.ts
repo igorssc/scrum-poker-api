@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { MembersRepository } from '@/application/repositories/members.repository';
@@ -27,7 +28,7 @@ export class SignOutMemberService {
   async execute(data: SignOutMemberServiceExecuteProps) {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
-    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
 
     const userActionIsOwnerTheRoom = roomExists.owner_id === data.userActionId;
 

@@ -1,6 +1,6 @@
 import { INVALID_PARAMS, ROOM_NOT_FOUND } from '@/application/errors/errors.constants';
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Room } from '@prisma/client';
 import { isUUID } from 'class-validator';
 
@@ -20,7 +20,7 @@ export class FindUniqueRoomService {
     const room = await this.roomsRepository.findById(query, true);
 
     if(!room) {
-      throw new BadRequestException(ROOM_NOT_FOUND);
+      throw new NotFoundException(ROOM_NOT_FOUND);
     }
 
     return { room };

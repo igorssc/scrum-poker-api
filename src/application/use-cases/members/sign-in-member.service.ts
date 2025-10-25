@@ -1,6 +1,6 @@
 import {
-  BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { MembersRepository } from '@/application/repositories/members.repository';
@@ -36,7 +36,7 @@ export class SignInMemberService {
 
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
-    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
 
     if (!data.userId) {
       const { user: userCreated } = await this.createUserService.execute({
@@ -49,7 +49,7 @@ export class SignInMemberService {
     if (data.userId) {
       const userFound = await this.usersRepository.findById(data.userId);
 
-      if (!userFound) throw new BadRequestException(USER_NOT_FOUND);
+      if (!userFound) throw new NotFoundException(USER_NOT_FOUND);
 
       const userActionIsInsideTheRoom =
         await this.membersRepository.findByUserAndRoomId({

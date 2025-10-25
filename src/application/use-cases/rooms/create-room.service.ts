@@ -1,5 +1,5 @@
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Room, StatusMember, StatusRoom } from '@prisma/client';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
@@ -36,7 +36,7 @@ export class CreateRoomService {
     if (data.userId) {
       const user = await this.roomsRepository.findById(userId);
 
-      if (!user) throw new BadRequestException(USER_NOT_FOUND);
+      if (!user) throw new NotFoundException(USER_NOT_FOUND);
     }
 
     if (!data.userId) {

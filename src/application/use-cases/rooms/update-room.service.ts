@@ -9,6 +9,7 @@ import { UpdateRoomDto } from '@/infra/dtos/rooms/update-room.dto';
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Room } from '@prisma/client';
@@ -38,7 +39,7 @@ export class UpdateRoomService {
 
     const roomExists = await this.roomsRepository.findById(roomId);
 
-    if (!roomExists) throw new BadRequestException(ROOM_NOT_FOUND);
+    if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
 
     const isUserInTheRoom = await this.membersRepository.findByUserAndRoomId({
       userId: userId,
