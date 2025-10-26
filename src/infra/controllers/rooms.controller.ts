@@ -36,7 +36,7 @@ import { DeleteRoomEvent } from '../websockets/events/delete-room.event';
 import { SignInRoomRefuseDto } from '../dtos/rooms/sign-in-room-refuse.dto';
 import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.event';
 import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
-import { RevealVotesRoomService } from '@/application/use-cases/rooms/reveal-votes-room.service';
+import { RevealVotesMembersService } from '@/application/use-cases/members/reveal-votes-members.service';
 import { RevealVotesEvent } from '../websockets/events/reveal-votes-room.event';
 
 @Controller('rooms')
@@ -63,7 +63,7 @@ export class RoomsController {
     private signInMemberService: SignInMemberService,
     private signInAcceptMemberService: SignInAcceptMemberService,
     private signInRefuseMemberService: SignInRefuseMemberService,
-    private revealVotesRoomService: RevealVotesRoomService,
+    private revealVotesMembersService: RevealVotesMembersService,
   ) {}
 
   @Get('/location')
@@ -163,8 +163,14 @@ export class RoomsController {
   }
 
   @Post(':roomId/vote/reveal')
-  async revealVotes(@Param('roomId') roomId: string) {
-    const { room } = await this.revealVotesRoomService.execute(roomId);
+  async revealVotes(
+    @Param('roomId') roomId: string,
+    @Query('user_id') userId: string,
+  ) {
+    const { room } = await this.revealVotesMembersService.execute({
+      roomId,
+      userId,
+    });
     
     this.revealVotesEvent.send(roomId, room);
     
