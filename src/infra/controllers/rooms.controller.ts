@@ -151,17 +151,6 @@ export class RoomsController {
     this.signOutEvent.send(roomId, body.user_id);
   }
 
-  @Post(':roomId/vote')
-  async vote(@Param('roomId') roomId: string, @Body() body: VoteRoomDto) {
-    const { member } = await this.voteMemberService.execute({
-      userId: body.user_id,
-      vote: body.vote,
-      roomId,
-    });
-
-    this.voteEvent.send(roomId, member);
-  }
-
   @Post(':roomId/vote/reveal')
   async revealVotes(
     @Param('roomId') roomId: string,
@@ -188,6 +177,17 @@ export class RoomsController {
     });
 
     this.clearVotesEvent.send(roomId);
+  }
+
+  @Post(':roomId/vote')
+  async vote(@Param('roomId') roomId: string, @Body() body: VoteRoomDto) {
+    const { member } = await this.voteMemberService.execute({
+      userId: body.user_id,
+      vote: body.vote,
+      roomId,
+    });
+
+    this.voteEvent.send(roomId, member);
   }
 
   @Patch(':roomId')
