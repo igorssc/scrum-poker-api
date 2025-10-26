@@ -190,6 +190,8 @@ export class RoomsController {
     });
 
     this.voteEvent.send(roomId, member);
+
+    return member;
   }
 
   @Patch(':roomId')
