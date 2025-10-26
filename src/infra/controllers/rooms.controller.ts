@@ -36,6 +36,8 @@ import { DeleteRoomEvent } from '../websockets/events/delete-room.event';
 import { SignInRoomRefuseDto } from '../dtos/rooms/sign-in-room-refuse.dto';
 import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.event';
 import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
+import { RevealVotesRoomService } from '@/application/use-cases/rooms/reveal-votes-room.service';
+import { RevealVotesEvent } from '../websockets/events/reveal-votes-room.event';
 
 @Controller('rooms')
 export class RoomsController {
@@ -48,6 +50,7 @@ export class RoomsController {
     private signInRefuseEvent: SignInRefuseEvent,
     private clearVotesEvent: ClearVotesEvent,
     private deleteRoomEvent: DeleteRoomEvent,
+    private revealVotesEvent: RevealVotesEvent,
 
     private findUniqueRoomService: FindUniqueRoomService,
     private findUniqueRoomByLocationService: FindAllRoomsByLocationService,
@@ -60,8 +63,7 @@ export class RoomsController {
     private signInMemberService: SignInMemberService,
     private signInAcceptMemberService: SignInAcceptMemberService,
     private signInRefuseMemberService: SignInRefuseMemberService,
-    private revealVotesRoomService: import('@/application/use-cases/rooms/reveal-votes-room.service').RevealVotesRoomService,
-    private revealVotesEvent: import('../websockets/events/reveal-votes-room.event').RevealVotesEvent,
+    private revealVotesRoomService: RevealVotesRoomService,
   ) {}
 
   @Get('/location')

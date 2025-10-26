@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import { ROOM_NOT_FOUND } from '@/application/errors/errors.constants';
+import { Room } from '@prisma/client';
 
 @Injectable()
 export class RevealVotesRoomService {
   constructor(private roomsRepository: RoomsRepository) {}
 
-  async execute(roomId: string): Promise<{ room: any }> {
+  async execute(roomId: string): Promise<{ room: Room }> {
     const room = await this.roomsRepository.findById(roomId);
     
     if (!room) {

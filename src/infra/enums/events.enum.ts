@@ -8,4 +8,5 @@ export enum EventsEnum {
   UPDATE_ROOM = 'update-room',
   UPDATE_USER = 'update-user',
   VOTE_MEMBER = 'vote-member',
+  VOTES_REVEALED = 'votes-revealed',
 }
