@@ -171,12 +171,14 @@ export class RoomsController {
     @Param('roomId') roomId: string,
     @Query('user_id') userId: string,
   ) {
-    await this.clearVotesMembersService.execute({
+    const { room } = await this.clearVotesMembersService.execute({
       userId,
       roomId,
     });
 
     this.clearVotesEvent.send(roomId);
+
+    return room;
   }
 
   @Post(':roomId/vote')

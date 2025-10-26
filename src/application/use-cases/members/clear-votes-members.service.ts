@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Member } from '@prisma/client';
+import { Member, Room } from '@prisma/client';
 import {
   ROOM_NOT_FOUND,
   USER_WITHOUT_PERMISSION,
@@ -27,7 +27,7 @@ export class ClearVotesMembersService {
     private membersRepository: MembersRepository,
   ) {}
 
-  async execute(data: ClearVotesMembersServiceExecuteProps): Promise<void> {
+  async execute(data: ClearVotesMembersServiceExecuteProps): Promise<{room: Room}> {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
     if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
@@ -52,6 +52,8 @@ export class ClearVotesMembersService {
       { vote: null },
     );
 
-    await this.roomsRepository.update(data.roomId, { cards_open: false });
+    const updatedRoom = await this.roomsRepository.update(data.roomId, { cards_open: false });
+
+    return { room: updatedRoom };
   }
 }
