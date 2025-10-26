@@ -50,7 +50,7 @@ export class CreateRoomService {
     const roomCreated = await this.roomsRepository.create({
       name: capitalizeInitials(data.name),
       owner: { connect: { id: userId } },
-      status: StatusRoom.OPEN,
+      status: StatusRoom.CLOSED,
       lat: data.lat,
       lng: data.lng,
       private: !!data.private,
