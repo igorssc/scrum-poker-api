@@ -1,4 +1,6 @@
-export const capitalizeInitials = (input: string) => {
+export const capitalizeInitials = (input?: string) => {
+  if (!input) return input;
+  
   const words: string[] = input.split(' ');
 
   const capitalizedWords: string[] = words.map((word) => {
