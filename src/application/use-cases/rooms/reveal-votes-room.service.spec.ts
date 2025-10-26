@@ -22,18 +22,19 @@ describe('RevealVotesRoomService', () => {
     roomsRepository = moduleRef.get(RoomsRepository);
   });
 
-  it('should update room status to OPEN', async () => {
+  it('should reveal cards (set cards_open to true)', async () => {
     const room: Room = {
       id: 'room-1',
       name: 'Sala Teste',
       owner_id: 'owner-1',
       created_at: new Date(),
       theme: 'default',
-      status: StatusRoom.CLOSED,
+      status: StatusRoom.OPEN,
       lat: null,
       lng: null,
       private: false,
       access: 'access-1',
+      cards_open: false,
     };
 
     roomsRepository.items.push(room);
@@ -46,7 +47,7 @@ describe('RevealVotesRoomService', () => {
 
     const result = await sut.execute('room-1');
 
-    expect(result.room.status).toBe(StatusRoom.OPEN);
+    expect(result.room.cards_open).toBe(true);
     
     roomsRepository.findById = originalFindById;
   });

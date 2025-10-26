@@ -51,5 +51,7 @@ export class ClearVotesMembersService {
       },
       { vote: null },
     );
+
+    await this.roomsRepository.update(data.roomId, { cards_open: false });
   }
 }

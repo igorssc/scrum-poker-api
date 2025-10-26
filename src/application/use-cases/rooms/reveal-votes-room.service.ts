@@ -13,7 +13,7 @@ export class RevealVotesRoomService {
       throw new NotFoundException(ROOM_NOT_FOUND);
     }
     
-    const updatedRoom = await this.roomsRepository.update(roomId, { status: 'OPEN' });
+    const updatedRoom = await this.roomsRepository.update(roomId, { cards_open: true });
     
     return { room: updatedRoom };
   }

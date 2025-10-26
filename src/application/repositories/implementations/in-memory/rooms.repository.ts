@@ -20,6 +20,7 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       private: data.private,
       access: randomUUID(),
       theme: data.theme,
+      cards_open: false,
     };
 
     this.items.push(roomCreated);

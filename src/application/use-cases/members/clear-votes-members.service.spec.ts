@@ -81,6 +81,11 @@ describe('Clear Votes Member Use Case', () => {
 
     expect(thirdUser.user_id).toBe('third-user-id-test');
     expect(thirdUser.vote).toBeNull();
+
+    const inMemoryRepo = roomsRepository as InMemoryRoomsRepository;
+    const updatedRoom = inMemoryRepo.items.find(room => room.id === roomCreated.id);
+    
+    expect(updatedRoom?.cards_open).toBe(false);
   });
 
   it('should be able to clear votes while in a room being owned', async () => {
@@ -111,6 +116,11 @@ describe('Clear Votes Member Use Case', () => {
 
     expect(firstUser.user_id).toBe('first-user-id-test');
     expect(firstUser.vote).toBeNull();
+
+    // Verificar se as cartas foram fechadas (cards_open = false)
+    const inMemoryRepo = roomsRepository as InMemoryRoomsRepository;
+    const updatedRoom = inMemoryRepo.items.find(room => room.id === roomCreated.id);
+    expect(updatedRoom?.cards_open).toBe(false);
   });
 
   it('should not be able to clear votes while not being in a room', async () => {
