@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryRoomsRepository } from '@/application/repositories/implementations/in-memory/rooms.repository';
 import { StatusRoom } from '@prisma/client';
 import { FindUniqueRoomService } from './find-unique-room.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
 describe('Find Unique Room Use Case', () => {
@@ -41,14 +41,14 @@ describe('Find Unique Room Use Case', () => {
   });
 
   it('should not be able to find a unique room non-existent', async () => {
-    const { room: roomFound } = await sut.execute(randomUUID());
+    const roomFound = sut.execute(randomUUID());
 
-    expect(roomFound).toBeNull();
+    await expect(roomFound).rejects.toThrow(NotFoundException);
   });
 
   it('should not be able to find a unique room with an ID other than uuid', async () => {
     const roomFound = sut.execute('id-with-unknown-format');
 
-    expect(roomFound).rejects.toThrow(BadRequestException);
+    await expect(roomFound).rejects.toThrow(BadRequestException);
   });
 });

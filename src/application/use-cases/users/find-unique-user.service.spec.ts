@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FindUniqueUserService } from './find-unique-user.service';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryUsersRepository } from '@/application/repositories/implementations/in-memory/users.repository';
-import { BadRequestException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 describe('Find Unique User Use Case', () => {
   let usersRepository: UsersRepository;
@@ -34,6 +34,6 @@ describe('Find Unique User Use Case', () => {
   });
 
   it('should not be able to find a non-existent user', async () => {
-    expect(sut.execute('test')).rejects.toThrow(BadRequestException);
+    await expect(sut.execute('37742b71-fdd8-448c-a497-f6b63f9c1b52')).rejects.toThrow(NotFoundException);
   });
 });

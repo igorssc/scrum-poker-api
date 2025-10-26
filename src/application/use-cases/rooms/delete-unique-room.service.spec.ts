@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryRoomsRepository } from '@/application/repositories/implementations/in-memory/rooms.repository';
 import { DeleteUniqueRoomService } from './delete-unique-room.service';
 import { StatusRoom } from '@prisma/client';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Delete Unique Room Use Case', () => {
   let sut: DeleteUniqueRoomService;
@@ -61,7 +61,7 @@ describe('Delete Unique Room Use Case', () => {
       userId: 'other-id',
     });
 
-    expect(roomDeleted).rejects.toThrow(UnauthorizedException);
+    await expect(roomDeleted).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to delete non-existent room', async () => {
@@ -70,6 +70,6 @@ describe('Delete Unique Room Use Case', () => {
       userId: 'user-id-test',
     });
 
-    expect(roomDeleted).rejects.toThrow(BadRequestException);
+    await expect(roomDeleted).rejects.toThrow(NotFoundException);
   });
 });

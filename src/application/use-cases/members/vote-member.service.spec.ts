@@ -6,7 +6,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { StatusRoom } from '@prisma/client';
 import { VoteMemberService } from './vote-member.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Vote Member Use Case', () => {
   let sut: VoteMemberService;
@@ -98,7 +98,7 @@ describe('Vote Member Use Case', () => {
       vote: 'vote-test',
     });
 
-    expect(voteCreated).rejects.toThrow(UnauthorizedException);
+    await expect(voteCreated).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to vote in a non-existent room', async () => {
@@ -108,6 +108,6 @@ describe('Vote Member Use Case', () => {
       vote: 'vote-test',
     });
 
-    expect(voteCreated).rejects.toThrow(BadRequestException);
+    await expect(voteCreated).rejects.toThrow(NotFoundException);
   });
 });

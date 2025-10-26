@@ -60,6 +60,8 @@ export class RoomsController {
     private signInMemberService: SignInMemberService,
     private signInAcceptMemberService: SignInAcceptMemberService,
     private signInRefuseMemberService: SignInRefuseMemberService,
+    private revealVotesRoomService: import('@/application/use-cases/rooms/reveal-votes-room.service').RevealVotesRoomService,
+    private revealVotesEvent: import('../websockets/events/reveal-votes-room.event').RevealVotesEvent,
   ) {}
 
   @Get('/location')
@@ -156,6 +158,15 @@ export class RoomsController {
     });
 
     this.voteEvent.send(roomId, member);
+  }
+
+  @Post(':roomId/vote/reveal')
+  async revealVotes(@Param('roomId') roomId: string) {
+    const { room } = await this.revealVotesRoomService.execute(roomId);
+    
+    this.revealVotesEvent.send(roomId, room);
+    
+    return room;
   }
 
   @Post(':roomId/vote/clear')

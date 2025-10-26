@@ -6,7 +6,7 @@ import { StatusRoom } from '@prisma/client';
 import { UpdateRoomService } from './update-room.service';
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { MembersRepository } from '@/application/repositories/members.repository';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Update Room Use Case', () => {
   let sut: UpdateRoomService;
@@ -108,7 +108,7 @@ describe('Update Room Use Case', () => {
       { name: 'test name' },
     );
 
-    expect(roomUpdated).rejects.toThrow(UnauthorizedException);
+    await expect(roomUpdated).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to upgrade non-existing room', async () => {
@@ -120,6 +120,6 @@ describe('Update Room Use Case', () => {
       { name: 'test name' },
     );
 
-    expect(roomUpdated).rejects.toThrow(BadRequestException);
+    await expect(roomUpdated).rejects.toThrow(NotFoundException);
   });
 });

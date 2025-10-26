@@ -6,7 +6,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { StatusRoom } from '@prisma/client';
 import { SignOutMemberService } from './sign-out-member.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Sign Out Member Use Case', () => {
   let sut: SignOutMemberService;
@@ -133,7 +133,7 @@ describe('Sign Out Member Use Case', () => {
       userActionId: 'other-user-id-test',
     });
 
-    expect(signOut).rejects.toThrow(UnauthorizedException);
+    await expect(signOut).rejects.toThrow(UnauthorizedException);
 
     const memberFound = await membersRepository.findByUserAndRoomId({
       userId: 'user-id-test',
@@ -161,7 +161,7 @@ describe('Sign Out Member Use Case', () => {
       userActionId: 'owner-id-test',
     });
 
-    expect(signOut).rejects.toThrow(BadRequestException);
+    await expect(signOut).rejects.toThrow(BadRequestException);
   });
 
   it('should not be able to remove non-existent room', async () => {
@@ -171,6 +171,6 @@ describe('Sign Out Member Use Case', () => {
       userActionId: 'owner-id-test',
     });
 
-    expect(signOut).rejects.toThrow(BadRequestException);
+    await expect(signOut).rejects.toThrow(NotFoundException);
   });
 });

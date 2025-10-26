@@ -11,6 +11,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { PrismaMembersRepository } from '@/application/repositories/implementations/prisma/members.repository';
 import { MembersModule } from '../members/members.module';
 import { DeleteUniqueRoomService } from './delete-unique-room.service';
+import { RevealVotesRoomService } from './reveal-votes-room.service';
 
 @Module({
   imports: [UsersModule, PrismaModule, MembersModule],
@@ -20,6 +21,7 @@ import { DeleteUniqueRoomService } from './delete-unique-room.service';
     FindUniqueRoomService,
     FindAllRoomsByLocationService,
     DeleteUniqueRoomService,
+    RevealVotesRoomService,
     { provide: RoomsRepository, useClass: PrismaRoomsRepository },
     { provide: MembersRepository, useClass: PrismaMembersRepository },
   ],
@@ -29,6 +31,7 @@ import { DeleteUniqueRoomService } from './delete-unique-room.service';
     FindUniqueRoomService,
     FindAllRoomsByLocationService,
     DeleteUniqueRoomService,
+    RevealVotesRoomService,
     RoomsRepository,
   ],
 })

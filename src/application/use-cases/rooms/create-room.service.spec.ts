@@ -7,7 +7,7 @@ import { UsersRepository } from '@/application/repositories/users.repository';
 import { InMemoryUsersRepository } from '@/application/repositories/implementations/in-memory/users.repository';
 import { MembersRepository } from '@/application/repositories/members.repository';
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
-import { BadRequestException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 describe('Create Room Use Case', () => {
   let sut: CreateRoomService;
@@ -33,6 +33,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
+      theme: 'primary'
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -49,6 +50,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
+      theme: 'primary',
       lat: 40.802793,
       lng: -73.679391,
     });
@@ -67,6 +69,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
+      theme: 'primary',
       private: true,
     });
 
@@ -84,6 +87,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
+      theme: 'primary'
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -98,6 +102,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: 'title of test',
       userName: 'username of test',
+      theme: 'primary'
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -113,6 +118,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'john doe',
+      theme: 'primary'
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -127,6 +133,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'john doe',
+      theme: 'primary'
     });
 
     const member = await membersRepository.findByUserAndRoomId({
@@ -143,10 +150,11 @@ describe('Create Room Use Case', () => {
     const request = sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
+      theme: 'primary',
       userId: 'test',
       private: true,
     });
 
-    expect(request).rejects.toThrow(BadRequestException);
+    await expect(request).rejects.toThrow(NotFoundException);
   });
 });

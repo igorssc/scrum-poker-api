@@ -6,7 +6,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { StatusRoom } from '@prisma/client';
 import { ClearVotesMembersService } from './clear-votes-members.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Clear Votes Member Use Case', () => {
   let sut: ClearVotesMembersService;
@@ -129,7 +129,7 @@ describe('Clear Votes Member Use Case', () => {
       userId: 'other-id-test',
     });
 
-    expect(cleanVotes).rejects.toThrow(UnauthorizedException);
+    await expect(cleanVotes).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to clear votes in a non-existent room', async () => {
@@ -138,6 +138,6 @@ describe('Clear Votes Member Use Case', () => {
       userId: 'other-id-test',
     });
 
-    expect(cleanVotes).rejects.toThrow(BadRequestException);
+    await expect(cleanVotes).rejects.toThrow(NotFoundException);
   });
 });

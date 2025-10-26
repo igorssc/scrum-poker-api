@@ -6,7 +6,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { StatusRoom } from '@prisma/client';
 import { SignInRefuseMemberService } from './sign-in-refuse-member.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Sign In Refuse Member Use Case', () => {
   let sut: SignInRefuseMemberService;
@@ -83,7 +83,7 @@ describe('Sign In Refuse Member Use Case', () => {
       ownerId: 'other-owner-id-test',
     });
 
-    expect(memberCreated).rejects.toThrow(UnauthorizedException);
+    await expect(memberCreated).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to refuse sign in the non-existent room', async () => {
@@ -94,7 +94,7 @@ describe('Sign In Refuse Member Use Case', () => {
       ownerId: 'other-owner-id-test',
     });
 
-    expect(memberCreated).rejects.toThrow(BadRequestException);
+    await expect(memberCreated).rejects.toThrow(NotFoundException);
   });
 
   it('should not be able to refuse sign in the current room', async () => {
@@ -120,7 +120,7 @@ describe('Sign In Refuse Member Use Case', () => {
       ownerId: 'other-owner-id-test',
     });
 
-    expect(memberCreated).rejects.toThrow(UnauthorizedException);
+    await expect(memberCreated).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to refuse sign in the room with incorrect access', async () => {
@@ -146,6 +146,6 @@ describe('Sign In Refuse Member Use Case', () => {
       ownerId: 'other-owner-id-test',
     });
 
-    expect(memberCreated).rejects.toThrow(UnauthorizedException);
+    await expect(memberCreated).rejects.toThrow(UnauthorizedException);
   });
 });

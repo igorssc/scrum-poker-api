@@ -9,6 +9,7 @@ import { UpdateUserEvent } from './events/update-user.event';
 import { ClearVotesEvent } from './events/clear-votes-room.event';
 import { DeleteRoomEvent } from './events/delete-room.event';
 import { SignInRefuseEvent } from './events/sign-in-refuse-member.event';
+import { RevealVotesEvent } from './events/reveal-votes-room.event';
 
 @Module({
   providers: [
@@ -22,6 +23,7 @@ import { SignInRefuseEvent } from './events/sign-in-refuse-member.event';
     UpdateUserEvent,
     ClearVotesEvent,
     DeleteRoomEvent,
+    RevealVotesEvent,
   ],
   exports: [
     WebSocketGateway,
@@ -34,6 +36,7 @@ import { SignInRefuseEvent } from './events/sign-in-refuse-member.event';
     UpdateUserEvent,
     ClearVotesEvent,
     DeleteRoomEvent,
+    RevealVotesEvent,
   ],
 })
 export class WebSocketModule {}

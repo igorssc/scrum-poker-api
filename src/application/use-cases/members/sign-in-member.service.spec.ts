@@ -9,7 +9,7 @@ import { SignInMemberService } from './sign-in-member.service';
 import { CreateUserService } from '../users/create-user.service';
 import { UsersRepository } from '@/application/repositories/users.repository';
 import { InMemoryUsersRepository } from '@/application/repositories/implementations/in-memory/users.repository';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('Sign In Member Use Case', () => {
   let sut: SignInMemberService;
@@ -167,7 +167,7 @@ describe('Sign In Member Use Case', () => {
       userId: userCreated.id,
     });
 
-    expect(signInMember).rejects.toThrow(UnauthorizedException);
+    await expect(signInMember).rejects.toThrow(UnauthorizedException);
   });
 
   it('should not be able to sign in a non-existent room', async () => {
@@ -181,7 +181,7 @@ describe('Sign In Member Use Case', () => {
       userId: userCreated.id,
     });
 
-    expect(signInMember).rejects.toThrow(BadRequestException);
+    await expect(signInMember).rejects.toThrow(NotFoundException);
   });
 
   it('should not be able to sign in a non-existent user', async () => {
@@ -201,6 +201,6 @@ describe('Sign In Member Use Case', () => {
       userId: 'user-id-test',
     });
 
-    expect(signInMember).rejects.toThrow(BadRequestException);
+    await expect(signInMember).rejects.toThrow(NotFoundException);
   });
 });
