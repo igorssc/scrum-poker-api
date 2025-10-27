@@ -8,7 +8,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./dist/src",
     "rootDir": "./src",
     "paths": {
       "@/*": ["./src/*"]
