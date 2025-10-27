@@ -38,6 +38,7 @@ import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.ev
 import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
 import { RevealVotesMembersService } from '@/application/use-cases/members/reveal-votes-members.service';
 import { RevealVotesEvent } from '../websockets/events/reveal-votes-room.event';
+import { StatusMember } from '@prisma/client';
 
 @Controller('rooms')
 export class RoomsController {
@@ -105,7 +106,13 @@ export class RoomsController {
       userId: body.user_id,
     });
 
-    this.signInEvent.send(data.room.id, data.member);
+    if(data.member.status === StatusMember.LOGGED){
+      this.signInAcceptEvent.send(roomId, data.member);
+    }
+
+    if(data.member.status !== StatusMember.LOGGED){
+      this.signInEvent.send(data.room.id, data.member);
+    }
 
     return data;
   }
