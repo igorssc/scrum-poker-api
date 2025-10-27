@@ -2,11 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.mjs",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/**"]
-      }
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -16,7 +13,7 @@
     }
   ],
   "functions": {
-    "api/index.mjs": {
+    "api/index.js": {
       "memory": 1024,
       "maxDuration": 30
     }
