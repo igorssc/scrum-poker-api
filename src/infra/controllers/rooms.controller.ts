@@ -106,13 +106,7 @@ export class RoomsController {
       userId: body.user_id,
     });
 
-    if(data.member.status === StatusMember.LOGGED){
-      this.signInAcceptEvent.send(roomId, data.member);
-    }
-
-    if(data.member.status !== StatusMember.LOGGED){
-      this.signInEvent.send(data.room.id, data.member);
-    }
+    this.signInEvent.send(data.room.id, data.member);
 
     return data;
   }
