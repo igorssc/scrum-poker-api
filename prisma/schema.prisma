@@ -29,17 +29,20 @@ model User {
 }
 
 model Room {
-  id           String     @id @default(uuid())
-  name         String
-  owner_id     String
-  created_at   DateTime   @default(now())
-  theme        String
-  status       StatusRoom
-  lat          Float?
-  lng          Float?
-  private      Boolean
-  access       String     @default(uuid())
-  cards_open   Boolean    @default(false)
+  id                      String     @id @default(uuid())
+  name                    String
+  owner_id                String
+  created_at              DateTime   @default(now())
+  theme                   String
+  status                  StatusRoom
+  lat                     Float?
+  lng                     Float?
+  private                 Boolean
+  access                  String     @default(uuid())
+  cards_open              Boolean    @default(false)
+  who_can_edit            String[]
+  who_can_open_cards      String[]
+  who_can_aprove_entries  String[]
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
