@@ -54,7 +54,10 @@ export class CreateRoomService {
       lat: data.lat,
       lng: data.lng,
       private: !!data.private,
-      theme: data.theme,      
+      theme: data.theme,
+      who_can_aprove_entries: [userId],
+      who_can_edit: [userId],
+      who_can_open_cards: [userId],
     });
 
     await this.membersRepository.create({

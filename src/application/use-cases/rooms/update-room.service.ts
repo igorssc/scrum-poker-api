@@ -51,7 +51,7 @@ export class UpdateRoomService {
     if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
 
     const isUserInTheRoom = await this.membersRepository.findByUserAndRoomId({
-      userId: userId,
+      userId,
       roomId,
     });
 
