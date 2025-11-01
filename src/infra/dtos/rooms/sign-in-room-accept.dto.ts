@@ -6,7 +6,7 @@ import {
 
 export abstract class SignInRoomAcceptDto {
   @IsString({ message: USER_ID_ERROR_MESSAGE })
-  userActionId: string;
+  user_action_id: string;
 
   @IsString({ message: USER_ID_ERROR_MESSAGE })
   user_id: string;

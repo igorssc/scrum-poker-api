@@ -118,7 +118,7 @@ export class RoomsController {
   ) {
     const data = await this.signInAcceptMemberService.execute({
       roomId,
-      userActionId: body.userActionId,
+      userActionId: body.user_action_id,
       access: body.access,
       userId: body.user_id,
     });
@@ -133,7 +133,7 @@ export class RoomsController {
   ) {
     const data = await this.signInRefuseMemberService.execute({
       roomId,
-      userActionId: body.userActionId,
+      userActionId: body.user_action_id,
       access: body.access,
       userId: body.user_id,
     });
