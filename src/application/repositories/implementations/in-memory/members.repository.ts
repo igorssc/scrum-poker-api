@@ -44,17 +44,35 @@ export class InMemoryMembersRepository implements MembersRepository {
   }
 
   async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
-    const memberIndex = this.items.findIndex(
-      (item) => item.user_id === props.userId && item.room_id === props.roomId,
-    );
+    if (props.userId) {
+      const memberIndex = this.items.findIndex(
+        (item) => item.user_id === props.userId && item.room_id === props.roomId,
+      );
 
-    if (memberIndex < 0) {
-      return null;
+      if (memberIndex < 0) {
+        return null;
+      }
+
+      Object.assign(this.items[memberIndex], member);
+      return { ...this.items[memberIndex] };
+    } else {
+      const membersToUpdate = this.items.filter(
+        (item) => item.room_id === props.roomId,
+      );
+
+      if (membersToUpdate.length === 0) {
+        return null;
+      }
+
+      membersToUpdate.forEach((memberItem) => {
+        const memberIndex = this.items.findIndex((item) => item.id === memberItem.id);
+        if (memberIndex >= 0) {
+          Object.assign(this.items[memberIndex], member);
+        }
+      });
+
+      return { ...this.items.find(item => item.id === membersToUpdate[0].id) };
     }
-
-    Object.assign(this.items[memberIndex], member);
-
-    return { ...this.items[memberIndex] };
   }
 
   async deleteUnique({ userId, roomId }: DeleteMemberProps) {
