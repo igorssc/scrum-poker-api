@@ -37,6 +37,12 @@ export class RevealVotesMembersService {
         throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
+    const userCanOpenCards = roomExists.who_can_open_cards.includes(data.userId);
+
+    if (!userCanOpenCards) {
+      throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+    }
+
     const updatedRoom = await this.roomsRepository.update(data.roomId, { cards_open: true });
 
     return { room: updatedRoom };
