@@ -9,7 +9,7 @@ export class InMemoryRoomsRepository implements RoomsRepository {
   public items: Room[] = [];
 
   async create(data: Prisma.RoomCreateInput) {
-    const roomCreated = {
+    const roomCreated: Room = {
       id: randomUUID(),
       name: data.name,
       owner_id: data.owner.connect.id,
@@ -21,6 +21,9 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       access: randomUUID(),
       theme: data.theme,
       cards_open: false,
+      who_can_edit: [data.owner.connect.id],
+      who_can_open_cards: [data.owner.connect.id],
+      who_can_aprove_entries: [data.owner.connect.id],
     };
 
     this.items.push(roomCreated);
