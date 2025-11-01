@@ -27,10 +27,10 @@ describe('Clear Votes Member Use Case', () => {
     membersRepository = moduleRef.get(MembersRepository);
   });
 
-  it('should be able to clear votes while in a room', async () => {
+  it('should clear votes when user is in who_can_open_cards list', async () => {
     const roomCreated = await roomsRepository.create({
       name: '0000 0000 0001',
-      owner: { connect: { id: 'user-id-test' } },
+      owner: { connect: { id: 'owner-id-test' } },
       status: StatusRoom.OPEN,
       lat: null,
       lng: null,
@@ -38,60 +38,79 @@ describe('Clear Votes Member Use Case', () => {
       theme: 'theme-test',
     });
 
+    await roomsRepository.update(roomCreated.id, {
+      who_can_open_cards: ['owner-id-test', 'member-1'],
+      cards_open: true
+    });
+
     await membersRepository.create({
-      member: { connect: { id: 'first-user-id-test' } },
+      member: { connect: { id: 'member-1' } },
       room: { connect: { id: roomCreated.id } },
     });
 
     await membersRepository.create({
-      member: { connect: { id: 'second-user-id-test' } },
+      member: { connect: { id: 'member-2' } },
       room: { connect: { id: roomCreated.id } },
     });
 
-    await membersRepository.create({
-      member: { connect: { id: 'third-user-id-test' } },
-      room: { connect: { id: roomCreated.id } },
-    });
-
-    await sut.execute({
+    const result = await sut.execute({
       roomId: roomCreated.id,
-      userId: 'first-user-id-test',
+      userId: 'member-1',
     });
 
-    const firstUser = await membersRepository.findByUserAndRoomId({
-      userId: 'first-user-id-test',
+    expect(result.room.cards_open).toBe(false);
+
+    const member1 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-1',
       roomId: roomCreated.id,
     });
+    expect(member1.vote).toBeNull();
 
-    expect(firstUser.user_id).toBe('first-user-id-test');
-    expect(firstUser.vote).toBeNull();
-
-    const secondUser = await membersRepository.findByUserAndRoomId({
-      userId: 'second-user-id-test',
+    const member2 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-2',
       roomId: roomCreated.id,
     });
-
-    expect(secondUser.user_id).toBe('second-user-id-test');
-    expect(secondUser.vote).toBeNull();
-
-    const thirdUser = await membersRepository.findByUserAndRoomId({
-      userId: 'third-user-id-test',
-      roomId: roomCreated.id,
-    });
-
-    expect(thirdUser.user_id).toBe('third-user-id-test');
-    expect(thirdUser.vote).toBeNull();
-
-    const inMemoryRepo = roomsRepository as InMemoryRoomsRepository;
-    const updatedRoom = inMemoryRepo.items.find(room => room.id === roomCreated.id);
-    
-    expect(updatedRoom?.cards_open).toBe(false);
+    expect(member2.vote).toBeNull();
   });
 
-  it('should be able to clear votes while in a room being owned', async () => {
+  it('should clear votes when user is room owner (owner always in who_can_open_cards)', async () => {
     const roomCreated = await roomsRepository.create({
       name: '0000 0000 0001',
-      owner: { connect: { id: 'user-id-test' } },
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      cards_open: true
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-1' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const result = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'owner-id-test',
+    });
+
+    expect(result.room.cards_open).toBe(false);
+
+    const member1 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-1',
+      roomId: roomCreated.id,
+    });
+    expect(member1.vote).toBeNull();
+  });
+
+  it('should throw UnauthorizedException if user is not in who_can_open_cards list', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
       status: StatusRoom.OPEN,
       lat: null,
       lng: null,
@@ -100,54 +119,148 @@ describe('Clear Votes Member Use Case', () => {
     });
 
     await membersRepository.create({
-      member: { connect: { id: 'first-user-id-test' } },
+      member: { connect: { id: 'member-1' } },
       room: { connect: { id: roomCreated.id } },
-    });
-
-    await sut.execute({
-      roomId: roomCreated.id,
-      userId: 'user-id-test',
-    });
-
-    const firstUser = await membersRepository.findByUserAndRoomId({
-      userId: 'first-user-id-test',
-      roomId: roomCreated.id,
-    });
-
-    expect(firstUser.user_id).toBe('first-user-id-test');
-    expect(firstUser.vote).toBeNull();
-
-    // Verificar se as cartas foram fechadas (cards_open = false)
-    const inMemoryRepo = roomsRepository as InMemoryRoomsRepository;
-    const updatedRoom = inMemoryRepo.items.find(room => room.id === roomCreated.id);
-    expect(updatedRoom?.cards_open).toBe(false);
-  });
-
-  it('should not be able to clear votes while not being in a room', async () => {
-    const roomCreated = await roomsRepository.create({
-      name: '0000 0000 0001',
-      owner: { connect: { id: 'user-id-test' } },
-      status: StatusRoom.OPEN,
-      lat: null,
-      lng: null,
-      private: false,
-      theme: 'theme-test',
     });
 
     const cleanVotes = sut.execute({
       roomId: roomCreated.id,
-      userId: 'other-id-test',
+      userId: 'member-1',
     });
 
     await expect(cleanVotes).rejects.toThrow(UnauthorizedException);
   });
 
-  it('should not be able to clear votes in a non-existent room', async () => {
+  it('should throw UnauthorizedException if user is not member of the room', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
     const cleanVotes = sut.execute({
-      roomId: 'room-id-test',
-      userId: 'other-id-test',
+      roomId: roomCreated.id,
+      userId: 'outsider-user',
+    });
+
+    await expect(cleanVotes).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should throw NotFoundException if room not found', async () => {
+    const cleanVotes = sut.execute({
+      roomId: 'non-existent-room',
+      userId: 'user-id',
     });
 
     await expect(cleanVotes).rejects.toThrow(NotFoundException);
+  });
+
+  it('should allow multiple users in who_can_open_cards to clear votes', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_open_cards: ['owner-id-test', 'member-1', 'member-2', 'member-3'],
+      cards_open: true
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-2' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const result = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'member-2',
+    });
+
+    expect(result.room.cards_open).toBe(false);
+  });
+
+  it('should work when room has cards already closed', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      cards_open: false
+    });
+
+    const result = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'owner-id-test',
+    });
+
+    expect(result.room.cards_open).toBe(false);
+  });
+
+  it('should clear all member votes regardless of who executes the action', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_open_cards: ['owner-id-test', 'authorized-member']
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'authorized-member' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'regular-member' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.update(
+      { roomId: roomCreated.id, userId: 'authorized-member' },
+      { vote: '5' }
+    );
+
+    await membersRepository.update(
+      { roomId: roomCreated.id, userId: 'regular-member' },
+      { vote: '8' }
+    );
+
+    await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'authorized-member',
+    });
+
+    const authorizedMember = await membersRepository.findByUserAndRoomId({
+      userId: 'authorized-member',
+      roomId: roomCreated.id,
+    });
+    expect(authorizedMember.vote).toBeNull();
+
+    const regularMember = await membersRepository.findByUserAndRoomId({
+      userId: 'regular-member',
+      roomId: roomCreated.id,
+    });
+    expect(regularMember.vote).toBeNull();
   });
 });

@@ -45,6 +45,12 @@ export class ClearVotesMembersService {
         throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
+    const userCanOpenCards = roomExists.who_can_open_cards.includes(data.userId);
+
+    if (!userCanOpenCards) {
+      throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+    }
+
     await this.membersRepository.update(
       {
         roomId: data.roomId,
