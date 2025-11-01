@@ -18,7 +18,7 @@ import { StatusMember } from '@prisma/client';
 interface SignInRefuseMemberServiceExecuteProps {
   userId: string;
   roomId: string;
-  ownerId: string;
+  userActionId: string;
   access: string;
 }
 
@@ -55,8 +55,10 @@ export class SignInRefuseMemberService {
       throw new UnauthorizedException(ACCESS_ROOM_INVALID);
     }
 
-    if (roomExists.owner_id !== data.ownerId) {
-      throw new UnauthorizedException(OWNER_ID_ROOM_INVALID);
+    if (roomExists.owner_id !== data.userActionId) {
+      if (!roomExists.who_can_aprove_entries.includes(data.userActionId)) {
+        throw new UnauthorizedException(OWNER_ID_ROOM_INVALID);
+      }
     }
 
     await this.membersRepository.update(

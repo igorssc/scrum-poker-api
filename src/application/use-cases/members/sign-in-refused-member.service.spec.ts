@@ -47,7 +47,7 @@ describe('Sign In Refuse Member Use Case', () => {
       roomId: roomCreated.id,
       userId: 'user-id-test',
       access: roomCreated.access,
-      ownerId: roomCreated.owner_id,
+      userActionId: roomCreated.owner_id,
     });
 
     const memberFound = await membersRepository.findByUserAndRoomId({
@@ -60,7 +60,7 @@ describe('Sign In Refuse Member Use Case', () => {
     expect(memberFound.vote).toBeNull();
   });
 
-  it('should not be able to refuse sign in the room if not the owner', async () => {
+  it('should not be able to refuse sign in the room without proper permissions', async () => {
     const roomCreated = await roomsRepository.create({
       name: '0000 0000 0001',
       owner: { connect: { id: 'owner-id-test' } },
@@ -80,7 +80,7 @@ describe('Sign In Refuse Member Use Case', () => {
       roomId: roomCreated.id,
       userId: 'user-id-test',
       access: roomCreated.access,
-      ownerId: 'other-owner-id-test',
+      userActionId: 'unauthorized-user-id',
     });
 
     await expect(memberCreated).rejects.toThrow(UnauthorizedException);
@@ -91,13 +91,13 @@ describe('Sign In Refuse Member Use Case', () => {
       roomId: 'room-id-test',
       userId: 'user-id-test',
       access: 'access-id-room',
-      ownerId: 'other-owner-id-test',
+      userActionId: 'user-action-id-test',
     });
 
     await expect(memberCreated).rejects.toThrow(NotFoundException);
   });
 
-  it('should not be able to refuse sign in the current room', async () => {
+  it('should not be able to refuse sign in the current room without permissions', async () => {
     const roomCreated = await roomsRepository.create({
       name: '0000 0000 0001',
       owner: { connect: { id: 'owner-id-test' } },
@@ -117,7 +117,7 @@ describe('Sign In Refuse Member Use Case', () => {
       roomId: roomCreated.id,
       userId: 'user-id-test',
       access: roomCreated.access,
-      ownerId: 'other-owner-id-test',
+      userActionId: 'unauthorized-user-id',
     });
 
     await expect(memberCreated).rejects.toThrow(UnauthorizedException);
@@ -143,9 +143,145 @@ describe('Sign In Refuse Member Use Case', () => {
       roomId: roomCreated.id,
       userId: 'user-id-test',
       access: 'access-id-test',
-      ownerId: 'other-owner-id-test',
+      userActionId: roomCreated.owner_id,
     });
 
     await expect(memberCreated).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should be able to refuse sign in with aprove entries permission', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_aprove_entries: ['moderator-id'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { member: memberCreated } = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'user-id-test',
+      access: roomCreated.access,
+      userActionId: 'moderator-id',
+    });
+
+    const memberFound = await membersRepository.findByUserAndRoomId({
+      roomId: roomCreated.id,
+      userId: 'user-id-test',
+    });
+
+    expect(memberFound.user_id).toBe(memberCreated.user_id);
+    expect(memberFound.room_id).toBe(roomCreated.id);
+    expect(memberFound.status).toBe('REFUSED');
+  });
+
+  it('should not be able to refuse sign in without aprove entries permission', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_aprove_entries: ['authorized-user-id'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const memberCreated = sut.execute({
+      roomId: roomCreated.id,
+      userId: 'user-id-test',
+      access: roomCreated.access,
+      userActionId: 'unauthorized-user-id',
+    });
+
+    await expect(memberCreated).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should allow multiple users with aprove entries permission to refuse members', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_aprove_entries: ['moderator-1', 'moderator-2'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test-1' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test-2' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { member: member1 } = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'user-id-test-1',
+      access: roomCreated.access,
+      userActionId: 'moderator-1',
+    });
+
+    const { member: member2 } = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'user-id-test-2',
+      access: roomCreated.access,
+      userActionId: 'moderator-2',
+    });
+
+    expect(member1.status).toBe('REFUSED');
+    expect(member2.status).toBe('REFUSED');
+  });
+
+  it('should allow owner to refuse even without explicit aprove entries permission', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'user-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { member: memberCreated } = await sut.execute({
+      roomId: roomCreated.id,
+      userId: 'user-id-test',
+      access: roomCreated.access,
+      userActionId: roomCreated.owner_id,
+    });
+
+    expect(memberCreated.status).toBe('REFUSED');
   });
 });
