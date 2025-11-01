@@ -54,7 +54,7 @@ export class CreateRoomService {
       lat: data.lat,
       lng: data.lng,
       private: !!data.private,
-      theme: data.theme,
+      theme: data.theme,      
     });
 
     await this.membersRepository.create({
