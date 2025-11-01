@@ -10,7 +10,7 @@ export class FindAllRoomsByLocationService {
     const room = await this.roomsRepository.findByLocation({
       lat,
       lng,
-      maxDistance: max_distance * 1.20, // Adding a 20% buffer to the max distance
+      maxDistance: max_distance,
     });
 
     return room;
