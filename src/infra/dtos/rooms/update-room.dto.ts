@@ -5,6 +5,7 @@ import {
   IsString,
   Max,
   Min,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -46,4 +47,19 @@ export abstract class UpdateRoomDto {
   @IsBoolean({ message: PRIVATE_ROOM_ERROR_MESSAGE })
   @Type(() => Boolean)
   private?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  who_can_edit?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  who_can_open_cards?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  who_can_aprove_entries?: string[];
 }
