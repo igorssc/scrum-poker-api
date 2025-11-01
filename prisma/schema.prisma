@@ -40,9 +40,9 @@ model Room {
   private                 Boolean
   access                  String     @default(uuid())
   cards_open              Boolean    @default(false)
-  who_can_edit            String[]
-  who_can_open_cards      String[]
-  who_can_aprove_entries  String[]
+  who_can_edit            String[]   @default([owner_id])
+  who_can_open_cards      String[]   @default([owner_id])
+  who_can_aprove_entries  String[]   @default([owner_id])
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
