@@ -426,4 +426,124 @@ describe('Update Room Use Case', () => {
 
     await expect(permissionUpdate).rejects.toThrow(UnauthorizedException);
   });
+
+  it('should allow only owner to modify auto_grant_permissions', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: ownerUpdate } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      { 
+        auto_grant_permissions: true,
+      },
+    );
+
+    expect(ownerUpdate.auto_grant_permissions).toBe(true);
+
+    const memberAutoGrantUpdate = sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        auto_grant_permissions: false,
+      },
+    );
+
+    await expect(memberAutoGrantUpdate).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should allow owner to update auto_grant_permissions along with other properties', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: roomUpdated } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      { 
+        name: 'Updated Room Name',
+        auto_grant_permissions: true,
+        who_can_edit: ['new-member-id'],
+      },
+    );
+
+    expect(roomUpdated.name).toBe('Updated Room Name');
+    expect(roomUpdated.auto_grant_permissions).toBe(true);
+    expect(roomUpdated.who_can_edit).toContain('owner-id-test');
+    expect(roomUpdated.who_can_edit).toContain('new-member-id');
+  });
+
+  it('should not allow non-owner to update auto_grant_permissions even with edit permission', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['member-id-test'],
+      who_can_open_cards: ['member-id-test'],
+      who_can_aprove_entries: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const memberUpdate = sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        name: 'Updated Name',
+        auto_grant_permissions: true,
+      },
+    );
+
+    await expect(memberUpdate).rejects.toThrow(UnauthorizedException);
+  });
 });

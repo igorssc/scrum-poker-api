@@ -74,4 +74,9 @@ export abstract class UpdateRoomDto {
   @IsOptional()
   @IsDateString()
   stop_timer?: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  auto_grant_permissions?: boolean;
 }

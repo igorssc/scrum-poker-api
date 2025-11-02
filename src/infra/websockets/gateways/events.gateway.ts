@@ -16,10 +16,6 @@ export class WebSocketGateway
   @WebSocketServer() server: Server;
 
   afterInit(server: Server) {
-    console.log('WebSocket initialized');
-    console.log('Environment:', process.env.NODE_ENV || 'development');
-    
-    // Health check endpoint via WebSocket
     server.on('connection', (socket) => {
       socket.emit('server-info', {
         environment: process.env.NODE_ENV || 'development',
@@ -31,30 +27,19 @@ export class WebSocketGateway
   }
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-    console.log(`Transport: ${client.conn.transport.name}`);
-    console.log(`User Agent: ${client.handshake.headers['user-agent']}`);
-    console.log(`Origin: ${client.handshake.headers.origin}`);
-    
-    // Send welcome message
     client.emit('connection-success', {
       clientId: client.id,
       transport: client.conn.transport.name,
       timestamp: new Date().toISOString(),
     });
 
-    // Monitor transport upgrades
     client.conn.on('upgrade', () => {
-      console.log(`Client ${client.id} upgraded to: ${client.conn.transport.name}`);
     });
 
     client.conn.on('upgradeError', (error) => {
-      console.error(`Client ${client.id} upgrade error:`, error);
     });
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
-    console.log(`Disconnect reason: ${client.disconnected}`);
   }
 }

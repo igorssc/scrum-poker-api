@@ -45,6 +45,8 @@ model Room {
   who_can_aprove_entries  String[]   @default([])
   start_timer             DateTime?
   stop_timer              DateTime?
+  auto_grant_permissions  Boolean    @default(false)
+  last_activity           DateTime   @default(now())
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]

@@ -23,6 +23,8 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       cards_open: false,
       start_timer: null,
       stop_timer: null,
+      auto_grant_permissions: false,
+      last_activity: new Date(),
       who_can_edit: [data.owner.connect.id],
       who_can_open_cards: [data.owner.connect.id],
       who_can_aprove_entries: [data.owner.connect.id],
