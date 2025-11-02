@@ -5,7 +5,7 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryRoomsRepository } from '@/application/repositories/implementations/in-memory/rooms.repository';
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { Test, TestingModule } from '@nestjs/testing';
-import { StatusRoom, Room } from '@prisma/client';
+import { StatusRoom } from '@prisma/client';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 describe('RevealVotesMembersService', () => {

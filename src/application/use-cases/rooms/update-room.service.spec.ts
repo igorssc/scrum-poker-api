@@ -311,7 +311,7 @@ describe('Update Room Use Case', () => {
     });
 
     const startDate = new Date();
-    const { room: ownerTimerUpdate } = await sut.execute(
+    await sut.execute(
       {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
@@ -322,7 +322,7 @@ describe('Update Room Use Case', () => {
     );
 
     const stopDate = new Date();
-    const { room: authorizedTimerUpdate } = await sut.execute(
+    await sut.execute(
       {
         roomId: roomCreated.id,
         userId: 'authorized-user-id',
@@ -408,7 +408,7 @@ describe('Update Room Use Case', () => {
     });
 
     const timerDate = new Date();
-    const { room: timerUpdate } = await sut.execute(
+    await sut.execute(
       {
         roomId: roomCreated.id,
         userId: 'member-id-test',

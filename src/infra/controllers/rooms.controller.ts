@@ -38,7 +38,6 @@ import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.ev
 import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
 import { RevealVotesMembersService } from '@/application/use-cases/members/reveal-votes-members.service';
 import { RevealVotesEvent } from '../websockets/events/reveal-votes-room.event';
-import { StatusMember } from '@prisma/client';
 
 @Controller('rooms')
 export class RoomsController {

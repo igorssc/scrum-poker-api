@@ -4,7 +4,6 @@ import {
 } from '@/application/errors/errors.constants';
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,

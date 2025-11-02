@@ -1,9 +1,5 @@
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Room, StatusMember, StatusRoom } from '@prisma/client';
 import { USER_NOT_FOUND } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';

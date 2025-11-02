@@ -6,11 +6,9 @@ import {
 import { RoomsRepository } from '@/application/repositories/rooms.repository';
 import {
   ROOM_NOT_FOUND,
-  USER_NOT_FOUND,
   USER_WITHOUT_PERMISSION,
 } from '@/application/errors/errors.constants';
-import { Member, Room } from '@prisma/client';
-import { UsersRepository } from '@/application/repositories/users.repository';
+import { Room } from '@prisma/client';
 import { MembersRepository } from '@/application/repositories/members.repository';
 
 interface RevealVotesMembersServiceProps {

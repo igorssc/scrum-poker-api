@@ -35,8 +35,8 @@ export class WebSocketGateway
 
     client.conn.on('upgrade', () => {});
 
-    client.conn.on('upgradeError', (error) => {});
+    client.conn.on('upgradeError', (_error) => {});
   }
 
-  handleDisconnect(client: Socket) {}
+  handleDisconnect(_client: Socket) {}
 }
