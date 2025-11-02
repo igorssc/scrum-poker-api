@@ -155,7 +155,7 @@ export class RoomsController {
   @Post(':roomId/vote/reveal')
   async revealVotes(
     @Param('roomId') roomId: string,
-    @Query('user_id') userId: string,
+    @Body('user_id') userId: string,
   ) {
     const { room } = await this.revealVotesMembersService.execute({
       roomId,
@@ -170,7 +170,7 @@ export class RoomsController {
   @Post(':roomId/vote/clear')
   async clearVotes(
     @Param('roomId') roomId: string,
-    @Query('user_id') userId: string,
+    @Body('user_id') userId: string,
   ) {
     const { room } = await this.clearVotesMembersService.execute({
       userId,
