@@ -15,31 +15,13 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   const corsOptions = {
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? ['https://scrumpoker.dev.br'] // Replace with your actual frontend domain
-        : '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
+    // origin: 'http://localhost:3000',
+    origin: '*',
+    methods: '*',
   };
 
   app.enableCors(corsOptions);
 
-  const PORT = process.env.PORT || 3000;
-
-  await app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV}`);
-    console.log(`WebSocket enabled with polling fallback`);
-  });
-
-  return app;
+  await app.listen(3000);
 }
-
-// For serverless environments like Vercel
-export default bootstrap;
-
-// For traditional server environments
-if (require.main === module) {
-  bootstrap();
-}
+bootstrap();
