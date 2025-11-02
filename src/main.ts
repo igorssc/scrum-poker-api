@@ -32,5 +32,14 @@ async function bootstrap() {
     console.log(`Environment: ${process.env.NODE_ENV}`);
     console.log(`WebSocket enabled with polling fallback`);
   });
+
+  return app;
 }
-bootstrap();
+
+// For serverless environments like Vercel
+export default bootstrap;
+
+// For traditional server environments
+if (require.main === module) {
+  bootstrap();
+}
