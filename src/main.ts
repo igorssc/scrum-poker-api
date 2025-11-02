@@ -15,16 +15,22 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   const corsOptions = {
-    // origin: 'http://localhost:3000',
-    origin: '*',
-    methods: '*',
+    origin: process.env.NODE_ENV === 'production' 
+      ? ['https://scrumpoker.dev.br'] // Replace with your actual frontend domain
+      : '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
   };
 
   app.enableCors(corsOptions);
 
   const PORT = process.env.PORT || 3000;
 
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  await app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
+    console.log(`WebSocket enabled with polling fallback`);
+  });
 
 }
 bootstrap();
