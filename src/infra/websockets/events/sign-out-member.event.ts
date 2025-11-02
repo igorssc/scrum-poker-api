@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { WebSocketGateway } from '../gateways/events.gateway';
-import { WebSocketGatewayDecorator } from '@/infra/decorators/web-socket-gateway.decorator';
 import { EventsEnum } from '@/infra/enums/events.enum';
 
 @Injectable()
-@WebSocketGatewayDecorator()
 export class SignOutEvent {
   constructor(private webSocketGateway: WebSocketGateway) {}
 

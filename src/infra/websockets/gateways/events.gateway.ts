@@ -16,14 +16,8 @@ export class WebSocketGateway
   @WebSocketServer() server: Server;
 
   afterInit(server: Server) {
-    server.on('connection', (socket) => {
-      socket.emit('server-info', {
-        environment: process.env.NODE_ENV || 'development',
-        timestamp: new Date().toISOString(),
-        transport: socket.conn.transport.name,
-        upgraded: socket.conn.upgraded,
-      });
-    });
+    console.log('WebSocket Gateway initialized');
+    server.setMaxListeners(20); // Increase max listeners to prevent warnings
   }
 
   handleConnection(client: Socket) {
@@ -31,6 +25,13 @@ export class WebSocketGateway
       clientId: client.id,
       transport: client.conn.transport.name,
       timestamp: new Date().toISOString(),
+    });
+
+    client.emit('server-info', {
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString(),
+      transport: client.conn.transport.name,
+      upgraded: client.conn.upgraded,
     });
 
     client.conn.on('upgrade', () => {});
