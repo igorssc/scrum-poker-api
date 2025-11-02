@@ -27,7 +27,7 @@ async function bootstrap() {
 
   const PORT = process.env.PORT || 3000;
 
-  await app.listen(PORT, '0.0.0.0', () => {
+  await app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
     console.log(`WebSocket enabled with polling fallback`);
