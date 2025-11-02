@@ -33,13 +33,10 @@ export class WebSocketGateway
       timestamp: new Date().toISOString(),
     });
 
-    client.conn.on('upgrade', () => {
-    });
+    client.conn.on('upgrade', () => {});
 
-    client.conn.on('upgradeError', (error) => {
-    });
+    client.conn.on('upgradeError', (error) => {});
   }
 
-  handleDisconnect(client: Socket) {
-  }
+  handleDisconnect(client: Socket) {}
 }

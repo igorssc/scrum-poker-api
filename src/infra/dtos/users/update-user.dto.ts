@@ -1,5 +1,8 @@
 import { IsOptional, IsString, MinLength } from 'class-validator';
-import { NAME_ERROR_MESSAGE, USER_NAME_MIN_LENGTH_ERROR_MESSAGE } from '@/application/errors/validations.constants';
+import {
+  NAME_ERROR_MESSAGE,
+  USER_NAME_MIN_LENGTH_ERROR_MESSAGE,
+} from '@/application/errors/validations.constants';
 
 export abstract class UpdateUserDto {
   @IsOptional()

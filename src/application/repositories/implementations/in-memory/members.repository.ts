@@ -46,7 +46,8 @@ export class InMemoryMembersRepository implements MembersRepository {
   async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
     if (props.userId) {
       const memberIndex = this.items.findIndex(
-        (item) => item.user_id === props.userId && item.room_id === props.roomId,
+        (item) =>
+          item.user_id === props.userId && item.room_id === props.roomId,
       );
 
       if (memberIndex < 0) {
@@ -65,13 +66,17 @@ export class InMemoryMembersRepository implements MembersRepository {
       }
 
       membersToUpdate.forEach((memberItem) => {
-        const memberIndex = this.items.findIndex((item) => item.id === memberItem.id);
+        const memberIndex = this.items.findIndex(
+          (item) => item.id === memberItem.id,
+        );
         if (memberIndex >= 0) {
           Object.assign(this.items[memberIndex], member);
         }
       });
 
-      return { ...this.items.find(item => item.id === membersToUpdate[0].id) };
+      return {
+        ...this.items.find((item) => item.id === membersToUpdate[0].id),
+      };
     }
   }
 

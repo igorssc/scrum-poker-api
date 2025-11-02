@@ -1,6 +1,13 @@
-import { INVALID_PARAMS, USER_NOT_FOUND } from '@/application/errors/errors.constants';
+import {
+  INVALID_PARAMS,
+  USER_NOT_FOUND,
+} from '@/application/errors/errors.constants';
 import { UsersRepository } from '@/application/repositories/users.repository';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { isUUID } from 'class-validator';
 
@@ -16,7 +23,7 @@ export class FindUniqueUserService {
     if (!isUUID(query)) {
       throw new BadRequestException(INVALID_PARAMS);
     }
-    
+
     const user = await this.usersRepository.findById(query);
 
     if (!user) {

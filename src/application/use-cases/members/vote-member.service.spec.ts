@@ -130,7 +130,7 @@ describe('Vote Member Use Case', () => {
     const initialRoomData = await roomsRepository.findById(roomCreated.id);
     const initialLastActivity = initialRoomData.last_activity;
 
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     await sut.execute({
       roomId: roomCreated.id,
@@ -139,9 +139,11 @@ describe('Vote Member Use Case', () => {
     });
 
     const updatedRoomData = await roomsRepository.findById(roomCreated.id);
-    
+
     expect(updatedRoomData.last_activity).not.toEqual(initialLastActivity);
-    expect(updatedRoomData.last_activity.getTime()).toBeGreaterThan(initialLastActivity.getTime());
+    expect(updatedRoomData.last_activity.getTime()).toBeGreaterThan(
+      initialLastActivity.getTime(),
+    );
   });
 
   it('should update room last_activity when owner votes', async () => {
@@ -163,7 +165,7 @@ describe('Vote Member Use Case', () => {
     const initialRoomData = await roomsRepository.findById(roomCreated.id);
     const initialLastActivity = initialRoomData.last_activity;
 
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     await sut.execute({
       roomId: roomCreated.id,
@@ -172,9 +174,11 @@ describe('Vote Member Use Case', () => {
     });
 
     const updatedRoomData = await roomsRepository.findById(roomCreated.id);
-    
+
     expect(updatedRoomData.last_activity).not.toEqual(initialLastActivity);
-    expect(updatedRoomData.last_activity.getTime()).toBeGreaterThan(initialLastActivity.getTime());
+    expect(updatedRoomData.last_activity.getTime()).toBeGreaterThan(
+      initialLastActivity.getTime(),
+    );
   });
 
   it('should return updated member with vote after voting', async () => {

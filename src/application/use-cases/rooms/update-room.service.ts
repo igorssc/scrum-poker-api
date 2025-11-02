@@ -34,11 +34,11 @@ export class UpdateRoomService {
     props: UpdateRoomServiceExecuteProps,
     data: UpdateRoomDto,
   ): Promise<UpdateRoomUseCaseResponse> {
-    const { 
-      name, 
-      lat, 
-      lng, 
-      private: privateRoom, 
+    const {
+      name,
+      lat,
+      lng,
+      private: privateRoom,
       theme,
       who_can_edit,
       who_can_open_cards,
@@ -65,13 +65,21 @@ export class UpdateRoomService {
 
     const userIsRoomOwner = roomOwnerId === userId;
 
-    const hasPermissionChanges = who_can_edit || who_can_open_cards || who_can_aprove_entries;
+    const hasPermissionChanges =
+      who_can_edit || who_can_open_cards || who_can_aprove_entries;
     const hasTimerChanges = startTimer !== undefined || stopTimer !== undefined;
     const hasOwnerOnlyChanges = autoGrantPermissions !== undefined;
-    const hasRegularUpdates = name || lat !== undefined || lng !== undefined || privateRoom !== undefined || theme;
+    const hasRegularUpdates =
+      name ||
+      lat !== undefined ||
+      lng !== undefined ||
+      privateRoom !== undefined ||
+      theme;
 
-    const userCanEditRoom = userIsRoomOwner || roomExists.who_can_edit.includes(userId);
-    const userCanModifyTimer = userIsRoomOwner || roomExists.who_can_open_cards.includes(userId);
+    const userCanEditRoom =
+      userIsRoomOwner || roomExists.who_can_edit.includes(userId);
+    const userCanModifyTimer =
+      userIsRoomOwner || roomExists.who_can_open_cards.includes(userId);
 
     if (hasPermissionChanges && !userIsRoomOwner) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
@@ -107,12 +115,18 @@ export class UpdateRoomService {
       lng,
       theme,
       private: privateRoom,
-      ...(who_can_edit && {who_can_edit: [...new Set(who_can_edit)]}),
-      ...(who_can_open_cards && {who_can_open_cards: [...new Set(who_can_open_cards)]}),
-      ...(who_can_aprove_entries && {who_can_aprove_entries: [...new Set(who_can_aprove_entries)]}),
-      ...(startTimer !== undefined && {start_timer: startTimer}),
-      ...(stopTimer !== undefined && {stop_timer: stopTimer}),
-      ...(autoGrantPermissions !== undefined && {auto_grant_permissions: autoGrantPermissions}),
+      ...(who_can_edit && { who_can_edit: [...new Set(who_can_edit)] }),
+      ...(who_can_open_cards && {
+        who_can_open_cards: [...new Set(who_can_open_cards)],
+      }),
+      ...(who_can_aprove_entries && {
+        who_can_aprove_entries: [...new Set(who_can_aprove_entries)],
+      }),
+      ...(startTimer !== undefined && { start_timer: startTimer }),
+      ...(stopTimer !== undefined && { stop_timer: stopTimer }),
+      ...(autoGrantPermissions !== undefined && {
+        auto_grant_permissions: autoGrantPermissions,
+      }),
     });
 
     return { room: roomUpdated };

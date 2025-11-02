@@ -7,7 +7,10 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"prisma/**/*.prisma\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"prisma/**/*.prisma\"",
+    "format:staged": "prettier --write --staged",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && prettier --write \"src/**/*.ts\" \"prisma/**/*.prisma\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -19,7 +22,8 @@
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "refresh": "cd prisma && ./refresh-db.sh",
-    "migrate:dev": "docker exec -it scrum_poker_api npx prisma migrate dev"
+    "migrate:dev": "docker exec -it scrum_poker_api npx prisma migrate dev",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.7",
@@ -36,6 +40,8 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.39.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.7",
@@ -49,7 +55,11 @@
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.6.2",
+    "prettier-plugin-prisma": "^5.0.0",
     "prisma": "^6.18.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.1.4",
@@ -57,7 +67,17 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2",
     "unplugin-swc": "^1.5.8",
     "vitest": "^4.0.2"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.prisma": [
+      "prettier --write"
+    ]
   }
 }

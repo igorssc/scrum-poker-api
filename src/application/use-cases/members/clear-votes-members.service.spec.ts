@@ -40,7 +40,7 @@ describe('Clear Votes Member Use Case', () => {
 
     await roomsRepository.update(roomCreated.id, {
       who_can_open_cards: ['owner-id-test', 'member-1'],
-      cards_open: true
+      cards_open: true,
     });
 
     await membersRepository.create({
@@ -85,7 +85,7 @@ describe('Clear Votes Member Use Case', () => {
     });
 
     await roomsRepository.update(roomCreated.id, {
-      cards_open: true
+      cards_open: true,
     });
 
     await membersRepository.create({
@@ -172,7 +172,7 @@ describe('Clear Votes Member Use Case', () => {
 
     await roomsRepository.update(roomCreated.id, {
       who_can_open_cards: ['owner-id-test', 'member-1', 'member-2', 'member-3'],
-      cards_open: true
+      cards_open: true,
     });
 
     await membersRepository.create({
@@ -200,7 +200,7 @@ describe('Clear Votes Member Use Case', () => {
     });
 
     await roomsRepository.update(roomCreated.id, {
-      cards_open: false
+      cards_open: false,
     });
 
     const result = await sut.execute({
@@ -223,7 +223,7 @@ describe('Clear Votes Member Use Case', () => {
     });
 
     await roomsRepository.update(roomCreated.id, {
-      who_can_open_cards: ['owner-id-test', 'authorized-member']
+      who_can_open_cards: ['owner-id-test', 'authorized-member'],
     });
 
     await membersRepository.create({
@@ -238,12 +238,12 @@ describe('Clear Votes Member Use Case', () => {
 
     await membersRepository.update(
       { roomId: roomCreated.id, userId: 'authorized-member' },
-      { vote: '5' }
+      { vote: '5' },
     );
 
     await membersRepository.update(
       { roomId: roomCreated.id, userId: 'regular-member' },
-      { vote: '8' }
+      { vote: '8' },
     );
 
     await sut.execute({

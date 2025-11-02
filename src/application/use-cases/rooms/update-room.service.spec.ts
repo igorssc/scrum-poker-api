@@ -144,16 +144,24 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
       },
-      { 
+      {
         who_can_edit: ['user1', 'user2'],
         who_can_open_cards: ['user3'],
         who_can_aprove_entries: ['user1', 'user3'],
       },
     );
 
-    expect(roomUpdated.who_can_edit).toEqual(['user1', 'user2', 'owner-id-test']);
+    expect(roomUpdated.who_can_edit).toEqual([
+      'user1',
+      'user2',
+      'owner-id-test',
+    ]);
     expect(roomUpdated.who_can_open_cards).toEqual(['user3', 'owner-id-test']);
-    expect(roomUpdated.who_can_aprove_entries).toEqual(['user1', 'user3', 'owner-id-test']);
+    expect(roomUpdated.who_can_aprove_entries).toEqual([
+      'user1',
+      'user3',
+      'owner-id-test',
+    ]);
   });
 
   it('should not allow non-owner to update permission arrays', async () => {
@@ -177,7 +185,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         who_can_edit: ['user1', 'user2'],
       },
     );
@@ -210,7 +218,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         name: 'Updated Room Name',
         theme: 'new-theme',
       },
@@ -250,7 +258,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
       },
-      { 
+      {
         who_can_edit: ['new-user-id'],
       },
     );
@@ -263,7 +271,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         who_can_open_cards: ['another-user-id'],
       },
     );
@@ -308,11 +316,10 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
       },
-      { 
+      {
         start_timer: startDate,
       },
     );
-
 
     const stopDate = new Date();
     const { room: authorizedTimerUpdate } = await sut.execute(
@@ -320,18 +327,17 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'authorized-user-id',
       },
-      { 
+      {
         stop_timer: stopDate,
       },
     );
-
 
     const memberTimerUpdate = sut.execute(
       {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         start_timer: new Date(),
       },
     );
@@ -364,7 +370,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         name: 'Updated by Member',
         theme: 'new-theme',
         private: true,
@@ -407,18 +413,17 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         start_timer: timerDate,
       },
     );
-
 
     const permissionUpdate = sut.execute(
       {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         who_can_edit: ['another-user-id'],
         name: 'Updated Name',
       },
@@ -457,7 +462,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
       },
-      { 
+      {
         auto_grant_permissions: true,
       },
     );
@@ -469,7 +474,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         auto_grant_permissions: false,
       },
     );
@@ -498,7 +503,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'owner-id-test',
       },
-      { 
+      {
         name: 'Updated Room Name',
         auto_grant_permissions: true,
         who_can_edit: ['new-member-id'],
@@ -538,7 +543,7 @@ describe('Update Room Use Case', () => {
         roomId: roomCreated.id,
         userId: 'member-id-test',
       },
-      { 
+      {
         name: 'Updated Name',
         auto_grant_permissions: true,
       },

@@ -40,7 +40,7 @@ describe('RevealVotesMembersService', () => {
 
     const result = await sut.execute({
       roomId: room.id,
-      userId: 'owner-1'
+      userId: 'owner-1',
     });
 
     expect(result.room.cards_open).toBe(true);
@@ -58,7 +58,7 @@ describe('RevealVotesMembersService', () => {
     });
 
     await roomsRepository.update(room.id, {
-      who_can_open_cards: ['owner-1', 'member-1']
+      who_can_open_cards: ['owner-1', 'member-1'],
     });
 
     await membersRepository.create({
@@ -68,7 +68,7 @@ describe('RevealVotesMembersService', () => {
 
     const result = await sut.execute({
       roomId: room.id,
-      userId: 'member-1'
+      userId: 'member-1',
     });
 
     expect(result.room.cards_open).toBe(true);
@@ -90,10 +90,12 @@ describe('RevealVotesMembersService', () => {
       room: { connect: { id: room.id } },
     });
 
-    await expect(sut.execute({
-      roomId: room.id,
-      userId: 'member-1'
-    })).rejects.toBeInstanceOf(UnauthorizedException);
+    await expect(
+      sut.execute({
+        roomId: room.id,
+        userId: 'member-1',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('should throw UnauthorizedException if user is not member of the room', async () => {
@@ -107,17 +109,21 @@ describe('RevealVotesMembersService', () => {
       theme: 'default',
     });
 
-    await expect(sut.execute({
-      roomId: room.id,
-      userId: 'unauthorized-user'
-    })).rejects.toBeInstanceOf(UnauthorizedException);
+    await expect(
+      sut.execute({
+        roomId: room.id,
+        userId: 'unauthorized-user',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('should throw NotFoundException if room not found', async () => {
-    await expect(sut.execute({
-      roomId: 'non-existent-room',
-      userId: 'user-1'
-    })).rejects.toBeInstanceOf(NotFoundException);
+    await expect(
+      sut.execute({
+        roomId: 'non-existent-room',
+        userId: 'user-1',
+      }),
+    ).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('should allow multiple users in who_can_open_cards to reveal votes', async () => {
@@ -132,7 +138,7 @@ describe('RevealVotesMembersService', () => {
     });
 
     await roomsRepository.update(room.id, {
-      who_can_open_cards: ['owner-1', 'member-1', 'member-2', 'member-3']
+      who_can_open_cards: ['owner-1', 'member-1', 'member-2', 'member-3'],
     });
 
     await membersRepository.create({
@@ -142,7 +148,7 @@ describe('RevealVotesMembersService', () => {
 
     const result = await sut.execute({
       roomId: room.id,
-      userId: 'member-2'
+      userId: 'member-2',
     });
 
     expect(result.room.cards_open).toBe(true);
@@ -160,12 +166,12 @@ describe('RevealVotesMembersService', () => {
     });
 
     await roomsRepository.update(room.id, {
-      cards_open: true
+      cards_open: true,
     });
 
     const result = await sut.execute({
       roomId: room.id,
-      userId: 'owner-1'
+      userId: 'owner-1',
     });
 
     expect(result.room.cards_open).toBe(true);
@@ -182,9 +188,11 @@ describe('RevealVotesMembersService', () => {
       theme: 'default',
     });
 
-    await expect(sut.execute({
-      roomId: room.id,
-      userId: 'outsider-user'
-    })).rejects.toBeInstanceOf(UnauthorizedException);
+    await expect(
+      sut.execute({
+        roomId: room.id,
+        userId: 'outsider-user',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 });

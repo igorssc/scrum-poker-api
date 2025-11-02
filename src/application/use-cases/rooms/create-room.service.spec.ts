@@ -33,7 +33,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
-      theme: 'primary'
+      theme: 'primary',
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -87,7 +87,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'John Doe',
-      theme: 'primary'
+      theme: 'primary',
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -102,7 +102,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: 'title of test',
       userName: 'username of test',
-      theme: 'primary'
+      theme: 'primary',
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -118,7 +118,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'john doe',
-      theme: 'primary'
+      theme: 'primary',
     });
 
     expect(room.id).toEqual(expect.any(String));
@@ -133,7 +133,7 @@ describe('Create Room Use Case', () => {
     const { room } = await sut.execute({
       name: '0000 0000 0001',
       userName: 'john doe',
-      theme: 'primary'
+      theme: 'primary',
     });
 
     const member = await membersRepository.findByUserAndRoomId({

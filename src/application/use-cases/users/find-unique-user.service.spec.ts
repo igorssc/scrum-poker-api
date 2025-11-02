@@ -34,6 +34,8 @@ describe('Find Unique User Use Case', () => {
   });
 
   it('should not be able to find a non-existent user', async () => {
-    await expect(sut.execute('37742b71-fdd8-448c-a497-f6b63f9c1b52')).rejects.toThrow(NotFoundException);
+    await expect(
+      sut.execute('37742b71-fdd8-448c-a497-f6b63f9c1b52'),
+    ).rejects.toThrow(NotFoundException);
   });
 });

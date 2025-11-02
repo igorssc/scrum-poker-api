@@ -6,7 +6,11 @@ import { MembersRepository } from '@/application/repositories/members.repository
 import { InMemoryMembersRepository } from '@/application/repositories/implementations/in-memory/members.repository';
 import { StatusRoom } from '@prisma/client';
 import { SignOutMemberService } from './sign-out-member.service';
-import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 describe('Sign Out Member Use Case', () => {
   let sut: SignOutMemberService;
@@ -214,7 +218,9 @@ describe('Sign Out Member Use Case', () => {
 
     expect(roomAfterSignOut.who_can_edit).not.toContain('user-id-test');
     expect(roomAfterSignOut.who_can_open_cards).not.toContain('user-id-test');
-    expect(roomAfterSignOut.who_can_aprove_entries).not.toContain('user-id-test');
+    expect(roomAfterSignOut.who_can_aprove_entries).not.toContain(
+      'user-id-test',
+    );
   });
 
   it('should remove user permissions when authorized user removes member with permissions', async () => {
@@ -231,7 +237,11 @@ describe('Sign Out Member Use Case', () => {
     await roomsRepository.update(roomCreated.id, {
       who_can_edit: ['user-id-test', 'other-user-id'],
       who_can_open_cards: ['user-id-test', 'other-user-id'],
-      who_can_aprove_entries: ['user-id-test', 'other-user-id', 'authorized-user-id'],
+      who_can_aprove_entries: [
+        'user-id-test',
+        'other-user-id',
+        'authorized-user-id',
+      ],
     });
 
     await membersRepository.create({
@@ -249,7 +259,10 @@ describe('Sign Out Member Use Case', () => {
 
     expect(roomAfterSignOut.who_can_edit).toEqual(['other-user-id']);
     expect(roomAfterSignOut.who_can_open_cards).toEqual(['other-user-id']);
-    expect(roomAfterSignOut.who_can_aprove_entries).toEqual(['other-user-id', 'authorized-user-id']);
+    expect(roomAfterSignOut.who_can_aprove_entries).toEqual([
+      'other-user-id',
+      'authorized-user-id',
+    ]);
   });
 
   it('should not update room permissions if user has no permissions', async () => {

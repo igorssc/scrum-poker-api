@@ -161,9 +161,9 @@ export class RoomsController {
       roomId,
       userId,
     });
-    
+
     this.revealVotesEvent.send(roomId, room);
-    
+
     return room;
   }
 

@@ -8,7 +8,6 @@ export class RevealVotesEvent {
   constructor(private webSocketGateway: WebSocketGateway) {}
 
   send(roomId: string, room: Room) {
-
     this.webSocketGateway.server.emit(roomId, {
       type: EventsEnum.VOTES_REVEALED,
       data: { room },

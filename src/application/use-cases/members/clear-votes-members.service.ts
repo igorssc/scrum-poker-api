@@ -27,7 +27,9 @@ export class ClearVotesMembersService {
     private membersRepository: MembersRepository,
   ) {}
 
-  async execute(data: ClearVotesMembersServiceExecuteProps): Promise<{room: Room}> {
+  async execute(
+    data: ClearVotesMembersServiceExecuteProps,
+  ): Promise<{ room: Room }> {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
     if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
@@ -45,7 +47,9 @@ export class ClearVotesMembersService {
         throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
-    const userCanOpenCards = roomExists.who_can_open_cards.includes(data.userId);
+    const userCanOpenCards = roomExists.who_can_open_cards.includes(
+      data.userId,
+    );
 
     if (!userCanOpenCards) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
@@ -58,7 +62,9 @@ export class ClearVotesMembersService {
       { vote: null },
     );
 
-    const updatedRoom = await this.roomsRepository.update(data.roomId, { cards_open: false });
+    const updatedRoom = await this.roomsRepository.update(data.roomId, {
+      cards_open: false,
+    });
 
     return { room: updatedRoom };
   }

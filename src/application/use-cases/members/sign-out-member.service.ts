@@ -32,7 +32,9 @@ export class SignOutMemberService {
 
     const userActionIsEqualUserSignOut = data.userId === data.userActionId;
 
-    const userCanPerformAction = roomExists.who_can_aprove_entries.includes(data.userActionId);
+    const userCanPerformAction = roomExists.who_can_aprove_entries.includes(
+      data.userActionId,
+    );
 
     if (!userActionIsEqualUserSignOut && !userCanPerformAction) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
@@ -51,17 +53,23 @@ export class SignOutMemberService {
     }
 
     const memberCanEditRoom = roomExists.who_can_edit.includes(data.userId);
-    const memberCanOpenCards = roomExists.who_can_open_cards.includes(data.userId);
-    const memberCanAproveEntries = roomExists.who_can_aprove_entries.includes(data.userId);
+    const memberCanOpenCards = roomExists.who_can_open_cards.includes(
+      data.userId,
+    );
+    const memberCanAproveEntries = roomExists.who_can_aprove_entries.includes(
+      data.userId,
+    );
 
     if (memberCanEditRoom || memberCanOpenCards || memberCanAproveEntries) {
       await this.roomsRepository.update(data.roomId, {
-        who_can_edit: roomExists.who_can_edit.filter(id => id !== data.userId),
+        who_can_edit: roomExists.who_can_edit.filter(
+          (id) => id !== data.userId,
+        ),
         who_can_open_cards: roomExists.who_can_open_cards.filter(
-          id => id !== data.userId,
+          (id) => id !== data.userId,
         ),
         who_can_aprove_entries: roomExists.who_can_aprove_entries.filter(
-          id => id !== data.userId,
+          (id) => id !== data.userId,
         ),
       });
     }

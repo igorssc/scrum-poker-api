@@ -15,9 +15,10 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://scrumpoker.dev.br'] // Replace with your actual frontend domain
-      : '*',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? ['https://scrumpoker.dev.br'] // Replace with your actual frontend domain
+        : '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   };
@@ -31,6 +32,5 @@ async function bootstrap() {
     console.log(`Environment: ${process.env.NODE_ENV}`);
     console.log(`WebSocket enabled with polling fallback`);
   });
-
 }
 bootstrap();

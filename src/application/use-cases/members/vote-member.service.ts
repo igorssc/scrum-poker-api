@@ -65,7 +65,9 @@ export class VoteMemberService {
       true,
     );
 
-    await this.roomsRepository.update(data.roomId, { last_activity: new Date() });
+    await this.roomsRepository.update(data.roomId, {
+      last_activity: new Date(),
+    });
 
     return { member: memberFound };
   }
