@@ -72,15 +72,26 @@ export class SignInMemberService {
       throw new UnauthorizedException(ACCESS_ROOM_INVALID);
     }
 
+    const roomIsPrivate = roomExists.private;
+
+    const userGrantPermissions = roomExists.auto_grant_permissions;
+
     const member = await this.membersRepository.create(
       {
         member: { connect: { id: user.id } },
         room: { connect: { id: data.roomId } },
-        ...(!roomExists.private &&
-          data.access && { status: StatusMember.LOGGED }),
+        ...(!roomIsPrivate && data.access && { status: StatusMember.LOGGED }),
       },
       true,
     );
+
+    if (!roomIsPrivate && data.access && userGrantPermissions) {
+      await this.roomsRepository.update(roomExists.id, {
+        who_can_open_cards: [...roomExists.who_can_open_cards, user.id],
+        who_can_aprove_entries: [...roomExists.who_can_aprove_entries, user.id],
+        who_can_edit: [...roomExists.who_can_edit, user.id],
+      });
+    }
 
     return {
       user,
