@@ -43,8 +43,8 @@ model Room {
   who_can_edit            String[]   @default([])
   who_can_open_cards      String[]   @default([])
   who_can_aprove_entries  String[]   @default([])
-  startTimer              DateTime?
-  stopTimer               DateTime?
+  start_timer             DateTime?
+  stop_timer              DateTime?
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]

@@ -104,8 +104,8 @@ export class UpdateRoomService {
       ...(who_can_edit && {who_can_edit: [...new Set(who_can_edit)]}),
       ...(who_can_open_cards && {who_can_open_cards: [...new Set(who_can_open_cards)]}),
       ...(who_can_aprove_entries && {who_can_aprove_entries: [...new Set(who_can_aprove_entries)]}),
-      ...(startTimer !== undefined && {startTimer}),
-      ...(stopTimer !== undefined && {stopTimer}),
+      ...(startTimer !== undefined && {start_timer: startTimer}),
+      ...(stopTimer !== undefined && {stop_timer: stopTimer}),
     });
 
     return { room: roomUpdated };
