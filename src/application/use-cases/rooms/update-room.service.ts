@@ -43,8 +43,8 @@ export class UpdateRoomService {
       who_can_edit,
       who_can_open_cards,
       who_can_aprove_entries,
-      startTimer,
-      stopTimer,
+      start_timer: startTimer,
+      stop_timer: stopTimer,
     } = data;
     const { roomId, userId } = props;
 

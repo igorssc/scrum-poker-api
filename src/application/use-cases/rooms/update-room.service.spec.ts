@@ -309,7 +309,7 @@ describe('Update Room Use Case', () => {
         userId: 'owner-id-test',
       },
       { 
-        startTimer: startDate,
+        start_timer: startDate,
       },
     );
 
@@ -321,7 +321,7 @@ describe('Update Room Use Case', () => {
         userId: 'authorized-user-id',
       },
       { 
-        stopTimer: stopDate,
+        stop_timer: stopDate,
       },
     );
 
@@ -332,7 +332,7 @@ describe('Update Room Use Case', () => {
         userId: 'member-id-test',
       },
       { 
-        startTimer: new Date(),
+        start_timer: new Date(),
       },
     );
 
@@ -408,7 +408,7 @@ describe('Update Room Use Case', () => {
         userId: 'member-id-test',
       },
       { 
-        startTimer: timerDate,
+        start_timer: timerDate,
       },
     );
 

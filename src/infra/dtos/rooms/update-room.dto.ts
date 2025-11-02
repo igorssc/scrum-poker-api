@@ -69,9 +69,9 @@ export abstract class UpdateRoomDto {
 
   @IsOptional()
   @IsDateString()
-  startTimer?: Date;
+  start_timer?: Date;
 
   @IsOptional()
   @IsDateString()
-  stopTimer?: Date;
+  stop_timer?: Date;
 }
