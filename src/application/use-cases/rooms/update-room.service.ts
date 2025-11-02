@@ -43,6 +43,8 @@ export class UpdateRoomService {
       who_can_edit,
       who_can_open_cards,
       who_can_aprove_entries,
+      startTimer,
+      stopTimer,
     } = data;
     const { roomId, userId } = props;
 
@@ -62,9 +64,22 @@ export class UpdateRoomService {
 
     const userIsRoomOwner = roomOwnerId === userId;
 
-    const userCanPerformUpdate = userIsRoomOwner || roomExists.who_can_edit.includes(userId);
+    const hasPermissionChanges = who_can_edit || who_can_open_cards || who_can_aprove_entries;
+    const hasTimerChanges = startTimer !== undefined || stopTimer !== undefined;
+    const hasRegularUpdates = name || lat !== undefined || lng !== undefined || privateRoom !== undefined || theme;
 
-    if (!userCanPerformUpdate) {
+    const userCanEditRoom = userIsRoomOwner || roomExists.who_can_edit.includes(userId);
+    const userCanModifyTimer = userIsRoomOwner || roomExists.who_can_open_cards.includes(userId);
+
+    if (hasPermissionChanges && !userIsRoomOwner) {
+      throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+    }
+
+    if (hasTimerChanges && !userCanModifyTimer) {
+      throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
+    }
+
+    if (hasRegularUpdates && !userCanEditRoom) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
@@ -89,6 +104,8 @@ export class UpdateRoomService {
       ...(who_can_edit && {who_can_edit: [...new Set(who_can_edit)]}),
       ...(who_can_open_cards && {who_can_open_cards: [...new Set(who_can_open_cards)]}),
       ...(who_can_aprove_entries && {who_can_aprove_entries: [...new Set(who_can_aprove_entries)]}),
+      ...(startTimer !== undefined && {startTimer}),
+      ...(stopTimer !== undefined && {stopTimer}),
     });
 
     return { room: roomUpdated };

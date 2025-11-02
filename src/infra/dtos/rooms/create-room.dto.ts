@@ -5,6 +5,7 @@ import {
   IsString,
   Max,
   Min,
+  MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -16,13 +17,16 @@ import {
   LONGITUDE_NUMBER_ERROR_MESSAGE,
   NAME_ERROR_MESSAGE,
   PRIVATE_ROOM_ERROR_MESSAGE,
+  ROOM_NAME_MIN_LENGTH_ERROR_MESSAGE,
   THEME_ERROR_MESSAGE,
   USER_ID_ERROR_MESSAGE,
   USER_NAME_ERROR_MESSAGE,
+  USER_NAME_MIN_LENGTH_ERROR_MESSAGE,
 } from '@/application/errors/validations.constants';
 
 export abstract class CreateRoomDto {
   @IsString({ message: NAME_ERROR_MESSAGE })
+  @MinLength(3, { message: ROOM_NAME_MIN_LENGTH_ERROR_MESSAGE })
   name: string;
 
   @IsString({ message: THEME_ERROR_MESSAGE })
@@ -33,6 +37,7 @@ export abstract class CreateRoomDto {
   user_id?: string;
 
   @IsString({ message: USER_NAME_ERROR_MESSAGE })
+  @MinLength(3, { message: USER_NAME_MIN_LENGTH_ERROR_MESSAGE })
   user_name: string;
 
   @IsOptional()

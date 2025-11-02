@@ -196,7 +196,6 @@ describe('Update Room Use Case', () => {
       theme: 'theme-test',
     });
 
-    // Atualiza a sala para permitir que member-id-test possa editar
     await roomsRepository.update(roomCreated.id, {
       who_can_edit: ['member-id-test'],
     });
@@ -219,5 +218,212 @@ describe('Update Room Use Case', () => {
 
     expect(roomUpdated.name).toBe('Updated Room Name');
     expect(roomUpdated.theme).toBe('new-theme');
+  });
+
+  it('should allow only owner to modify permissions', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: ownerUpdate } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      { 
+        who_can_edit: ['new-user-id'],
+      },
+    );
+
+    expect(ownerUpdate.who_can_edit).toContain('owner-id-test');
+    expect(ownerUpdate.who_can_edit).toContain('new-user-id');
+
+    const memberPermissionUpdate = sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        who_can_open_cards: ['another-user-id'],
+      },
+    );
+
+    await expect(memberPermissionUpdate).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should allow only users with who_can_open_cards permission to modify timer', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_open_cards: ['authorized-user-id'],
+      who_can_edit: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'authorized-user-id' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const startDate = new Date();
+    const { room: ownerTimerUpdate } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      { 
+        startTimer: startDate,
+      },
+    );
+
+
+    const stopDate = new Date();
+    const { room: authorizedTimerUpdate } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'authorized-user-id',
+      },
+      { 
+        stopTimer: stopDate,
+      },
+    );
+
+
+    const memberTimerUpdate = sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        startTimer: new Date(),
+      },
+    );
+
+    await expect(memberTimerUpdate).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should allow regular updates for users with edit permission', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: roomUpdated } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        name: 'Updated by Member',
+        theme: 'new-theme',
+        private: true,
+        lat: 10.5,
+        lng: -20.3,
+      },
+    );
+
+    expect(roomUpdated.name).toBe('Updated By Member');
+    expect(roomUpdated.theme).toBe('new-theme');
+    expect(roomUpdated.private).toBe(true);
+    expect(roomUpdated.lat).toBe(10.5);
+    expect(roomUpdated.lng).toBe(-20.3);
+  });
+
+  it('should not allow combined permission and timer changes for non-owner', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['member-id-test'],
+      who_can_open_cards: ['member-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const timerDate = new Date();
+    const { room: timerUpdate } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        startTimer: timerDate,
+      },
+    );
+
+
+    const permissionUpdate = sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'member-id-test',
+      },
+      { 
+        who_can_edit: ['another-user-id'],
+        name: 'Updated Name',
+      },
+    );
+
+    await expect(permissionUpdate).rejects.toThrow(UnauthorizedException);
   });
 });

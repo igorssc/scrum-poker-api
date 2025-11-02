@@ -3,6 +3,10 @@ export const PRIVATE_ROOM_ERROR_MESSAGE =
 
 export const NAME_ERROR_MESSAGE = 'O nome deve ser uma string.';
 
+export const USER_NAME_MIN_LENGTH_ERROR_MESSAGE = 'O nome de usuário deve ter pelo menos 3 caracteres.';
+
+export const ROOM_NAME_MIN_LENGTH_ERROR_MESSAGE = 'O nome da sala deve ter pelo menos 3 caracteres.';
+
 export const THEME_ERROR_MESSAGE = 'O tema deve ser uma string.';
 
 export const ACCESS_ROOM_ERROR_MESSAGE =

@@ -21,6 +21,8 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       access: randomUUID(),
       theme: data.theme,
       cards_open: false,
+      startTimer: null,
+      stopTimer: null,
       who_can_edit: [data.owner.connect.id],
       who_can_open_cards: [data.owner.connect.id],
       who_can_aprove_entries: [data.owner.connect.id],
