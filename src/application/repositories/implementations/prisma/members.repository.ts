@@ -41,6 +41,16 @@ export class PrismaMembersRepository implements MembersRepository {
     return member;
   }
 
+  async findAllByRoomId(roomId: string) {
+    const members = await this.prisma.member.findMany({
+      where: {
+        room_id: roomId,
+      },
+    });
+
+    return members;
+  }
+
   async update(props: UpdateProps, member: Prisma.MemberUpdateInput) {
     const data = await this.prisma.member.updateMany({
       where: {

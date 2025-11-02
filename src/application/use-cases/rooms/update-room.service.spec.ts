@@ -551,4 +551,113 @@ describe('Update Room Use Case', () => {
 
     await expect(memberUpdate).rejects.toThrow(UnauthorizedException);
   });
+
+  it('should grant all permissions to all members when auto_grant_permissions is set to true', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-1-id' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-2-id' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-3-id' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: roomUpdated } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      {
+        auto_grant_permissions: true,
+      },
+    );
+
+    expect(roomUpdated.auto_grant_permissions).toBe(true);
+
+    const expectedUsers = [
+      'owner-id-test',
+      'member-1-id',
+      'member-2-id',
+      'member-3-id',
+    ];
+
+    expect(roomUpdated.who_can_edit).toEqual(
+      expect.arrayContaining(expectedUsers),
+    );
+    expect(roomUpdated.who_can_open_cards).toEqual(
+      expect.arrayContaining(expectedUsers),
+    );
+    expect(roomUpdated.who_can_aprove_entries).toEqual(
+      expect.arrayContaining(expectedUsers),
+    );
+
+    expect(roomUpdated.who_can_edit).toHaveLength(4);
+    expect(roomUpdated.who_can_open_cards).toHaveLength(4);
+    expect(roomUpdated.who_can_aprove_entries).toHaveLength(4);
+  });
+
+  it('should not grant permissions when auto_grant_permissions is set to false', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+    });
+
+    await roomsRepository.update(roomCreated.id, {
+      who_can_edit: ['owner-id-test'],
+      who_can_open_cards: ['owner-id-test'],
+      who_can_aprove_entries: ['owner-id-test'],
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-1-id' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    const { room: roomUpdated } = await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      {
+        auto_grant_permissions: false,
+      },
+    );
+
+    expect(roomUpdated.auto_grant_permissions).toBe(false);
+
+    expect(roomUpdated.who_can_edit).toEqual(['owner-id-test']);
+    expect(roomUpdated.who_can_open_cards).toEqual(['owner-id-test']);
+    expect(roomUpdated.who_can_aprove_entries).toEqual(['owner-id-test']);
+  });
 });

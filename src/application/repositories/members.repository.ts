@@ -31,5 +31,7 @@ export abstract class MembersRepository {
     includeUser?: boolean,
   ) => Promise<Member | null>;
 
+  findAllByRoomId: (roomId: string) => Promise<Member[]>;
+
   deleteUnique: (props: DeleteMemberProps) => Promise<Member>;
 }

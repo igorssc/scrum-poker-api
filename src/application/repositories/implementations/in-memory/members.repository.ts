@@ -39,6 +39,10 @@ export class InMemoryMembersRepository implements MembersRepository {
     return { ...member };
   }
 
+  async findAllByRoomId(roomId: string) {
+    return this.items.filter((item) => item.room_id === roomId);
+  }
+
   async totalCount() {
     return this.items.length;
   }

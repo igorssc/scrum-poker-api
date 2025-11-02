@@ -109,18 +109,39 @@ export class UpdateRoomService {
       who_can_open_cards.push(roomOwnerId);
     }
 
+    let finalWhoCanEdit = who_can_edit;
+    let finalWhoCanOpenCards = who_can_open_cards;
+    let finalWhoCanAproveEntries = who_can_aprove_entries;
+
+    if (autoGrantPermissions === true) {
+      const allMembers = await this.membersRepository.findAllByRoomId(roomId);
+      const allMemberIds = allMembers.map((member) => member.user_id);
+
+      const allUsersWithOwner = [...new Set([...allMemberIds, roomOwnerId])];
+
+      finalWhoCanEdit = who_can_edit
+        ? [...new Set([...who_can_edit, ...allUsersWithOwner])]
+        : allUsersWithOwner;
+      finalWhoCanOpenCards = who_can_open_cards
+        ? [...new Set([...who_can_open_cards, ...allUsersWithOwner])]
+        : allUsersWithOwner;
+      finalWhoCanAproveEntries = who_can_aprove_entries
+        ? [...new Set([...who_can_aprove_entries, ...allUsersWithOwner])]
+        : allUsersWithOwner;
+    }
+
     const roomUpdated = await this.roomsRepository.update(roomId, {
       name: capitalizeInitials(name),
       lat,
       lng,
       theme,
       private: privateRoom,
-      ...(who_can_edit && { who_can_edit: [...new Set(who_can_edit)] }),
-      ...(who_can_open_cards && {
-        who_can_open_cards: [...new Set(who_can_open_cards)],
+      ...(finalWhoCanEdit && { who_can_edit: [...new Set(finalWhoCanEdit)] }),
+      ...(finalWhoCanOpenCards && {
+        who_can_open_cards: [...new Set(finalWhoCanOpenCards)],
       }),
-      ...(who_can_aprove_entries && {
-        who_can_aprove_entries: [...new Set(who_can_aprove_entries)],
+      ...(finalWhoCanAproveEntries && {
+        who_can_aprove_entries: [...new Set(finalWhoCanAproveEntries)],
       }),
       ...(startTimer !== undefined && { start_timer: startTimer }),
       ...(stopTimer !== undefined && { stop_timer: stopTimer }),
