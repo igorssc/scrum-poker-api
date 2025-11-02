@@ -38,6 +38,7 @@ import { SignInRefuseEvent } from '../websockets/events/sign-in-refuse-member.ev
 import { SignInRefuseMemberService } from '@/application/use-cases/members/sign-in-refuse-member.service';
 import { RevealVotesMembersService } from '@/application/use-cases/members/reveal-votes-members.service';
 import { RevealVotesEvent } from '../websockets/events/reveal-votes-room.event';
+import { CleanupInactiveRoomsService } from '@/application/use-cases/rooms/cleanup-inactive-rooms.service';
 
 @Controller('rooms')
 export class RoomsController {
@@ -64,6 +65,7 @@ export class RoomsController {
     private signInAcceptMemberService: SignInAcceptMemberService,
     private signInRefuseMemberService: SignInRefuseMemberService,
     private revealVotesMembersService: RevealVotesMembersService,
+    private cleanupInactiveRoomsService: CleanupInactiveRoomsService,
   ) {}
 
   @Get('/location')
@@ -208,6 +210,18 @@ export class RoomsController {
     this.updateRoomEvent.send(roomId, room);
 
     return room;
+  }
+
+  @Post('cleanup-inactive')
+  @HttpCode(200)
+  async cleanupInactiveRooms() {
+    const result = await this.cleanupInactiveRoomsService.execute();
+
+    return {
+      message: `${result.closedRoomsCount} inactive rooms have been closed`,
+      closedRoomsCount: result.closedRoomsCount,
+      closedRoomIds: result.closedRoomIds,
+    };
   }
 
   @Delete(':roomId')

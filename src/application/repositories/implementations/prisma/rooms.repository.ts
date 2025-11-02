@@ -68,6 +68,17 @@ export class PrismaRoomsRepository implements RoomsRepository {
     return await this.prisma.room.count();
   }
 
+  async findInactiveRooms(lastActivityBefore: Date) {
+    return await this.prisma.room.findMany({
+      where: {
+        status: StatusRoom.OPEN,
+        last_activity: {
+          lt: lastActivityBefore,
+        },
+      },
+    });
+  }
+
   async update(roomId: string, room: Prisma.RoomUpdateInput) {
     const data = await this.prisma.room.update({
       where: {

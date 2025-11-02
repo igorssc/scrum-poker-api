@@ -70,6 +70,14 @@ export class InMemoryRoomsRepository implements RoomsRepository {
     return this.items.length;
   }
 
+  async findInactiveRooms(lastActivityBefore: Date) {
+    return this.items.filter(
+      (item) =>
+        item.status === StatusRoom.OPEN &&
+        item.last_activity < lastActivityBefore,
+    );
+  }
+
   async update(roomId: string, room: Prisma.RoomUpdateInput) {
     const roomIndex = this.items.findIndex((item) => item.id === roomId);
 

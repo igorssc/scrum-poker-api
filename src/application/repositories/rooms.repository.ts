@@ -17,5 +17,7 @@ export abstract class RoomsRepository {
 
   findByLocation: (props: LocationProps) => Promise<Room[] | null>;
 
+  findInactiveRooms: (lastActivityBefore: Date) => Promise<Room[]>;
+
   deleteUnique: (RoomId: string) => Promise<Room>;
 }
