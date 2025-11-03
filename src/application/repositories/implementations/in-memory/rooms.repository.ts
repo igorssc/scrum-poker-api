@@ -28,6 +28,8 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       who_can_edit: [data.owner.connect.id],
       who_can_open_cards: [data.owner.connect.id],
       who_can_aprove_entries: [data.owner.connect.id],
+      current_issue: null,
+      current_sector: null,
     };
 
     this.items.push(roomCreated);

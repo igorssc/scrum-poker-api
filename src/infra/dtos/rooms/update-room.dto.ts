@@ -79,4 +79,12 @@ export abstract class UpdateRoomDto {
   @IsBoolean()
   @Type(() => Boolean)
   auto_grant_permissions?: boolean;
+
+  @IsOptional()
+  @IsString()
+  current_issue?: string;
+
+  @IsOptional()
+  @IsString()
+  current_sector?: string;
 }

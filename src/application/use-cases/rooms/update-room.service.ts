@@ -46,6 +46,8 @@ export class UpdateRoomService {
       start_timer: startTimer,
       stop_timer: stopTimer,
       auto_grant_permissions: autoGrantPermissions,
+      current_issue: currentIssue,
+      current_sector: currentSector,
     } = data;
     const { roomId, userId } = props;
 
@@ -68,6 +70,8 @@ export class UpdateRoomService {
     const hasPermissionChanges =
       who_can_edit || who_can_open_cards || who_can_aprove_entries;
     const hasTimerChanges = startTimer !== undefined || stopTimer !== undefined;
+    const hasIssueOrSectorChanges =
+      currentIssue !== undefined || currentSector !== undefined;
     const hasOwnerOnlyChanges = autoGrantPermissions !== undefined;
     const hasRegularUpdates =
       name ||
@@ -89,7 +93,7 @@ export class UpdateRoomService {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
-    if (hasTimerChanges && !userCanModifyTimer) {
+    if ((hasTimerChanges || hasIssueOrSectorChanges) && !userCanModifyTimer) {
       throw new UnauthorizedException(USER_WITHOUT_PERMISSION);
     }
 
@@ -148,6 +152,8 @@ export class UpdateRoomService {
       ...(autoGrantPermissions !== undefined && {
         auto_grant_permissions: autoGrantPermissions,
       }),
+      ...(currentIssue !== undefined && { current_issue: currentIssue }),
+      ...(currentSector !== undefined && { current_sector: currentSector }),
     });
 
     return { room: roomUpdated };

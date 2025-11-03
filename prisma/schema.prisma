@@ -47,6 +47,8 @@ model Room {
   stop_timer             DateTime?
   auto_grant_permissions Boolean    @default(false)
   last_activity          DateTime   @default(now())
+  current_issue          String?
+  current_sector         String?
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
