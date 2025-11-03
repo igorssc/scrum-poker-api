@@ -19,11 +19,12 @@ enum StatusMember {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  created_at DateTime @default(now())
-  rooms      Room[]
-  members    Member[]
+  id           String       @id @default(uuid())
+  name         String
+  created_at   DateTime     @default(now())
+  rooms        Room[]
+  members      Member[]
+  vote_details VoteDetail[]
 
   @@map("users")
 }
@@ -52,6 +53,7 @@ model Room {
 
   owner   User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members Member[]
+  votes   Vote[]
 
   @@map("rooms")
 }
@@ -68,4 +70,47 @@ model Member {
   room   Room @relation(fields: [room_id], references: [id], onDelete: Cascade)
 
   @@map("members")
+}
+
+model Vote {
+  id              String    @id @default(uuid())
+  room_id         String
+  topic           String
+  sector          String
+  created_at      DateTime  @default(now())
+  finalized_at    DateTime?
+  total_duration  Int?
+  final_consensus String?
+
+  room          Room          @relation(fields: [room_id], references: [id], onDelete: Cascade)
+  voting_Rounds VotingRound[]
+
+  @@map("votes")
+}
+
+model VotingRound {
+  id           String   @id @default(uuid())
+  vote_id      String
+  voted_at     DateTime @default(now())
+  duration     Int?
+  consensus    String?
+  winner_cards String[] @default([])
+
+  votes VoteDetail[]
+  vote  Vote         @relation(fields: [vote_id], references: [id], onDelete: Cascade)
+
+  @@map("voting_rounds")
+}
+
+model VoteDetail {
+  id              String   @id @default(uuid())
+  voting_round_id String
+  user_id         String
+  card            String
+  created_at      DateTime @default(now())
+
+  user         User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  voting_round VotingRound @relation(fields: [voting_round_id], references: [id], onDelete: Cascade)
+
+  @@map("vote_details")
 }

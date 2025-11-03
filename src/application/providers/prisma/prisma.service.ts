@@ -74,6 +74,18 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.client.member;
   }
 
+  get vote() {
+    return this.client.vote;
+  }
+
+  get votingRound() {
+    return this.client.votingRound;
+  }
+
+  get voteDetail() {
+    return this.client.voteDetail;
+  }
+
   async onModuleInit() {
     try {
       if (!this.client || this.client.$connect === undefined) {
