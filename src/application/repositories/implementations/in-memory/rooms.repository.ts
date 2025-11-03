@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Room, StatusRoom } from '@prisma/client';
+import { Prisma, Room, StatusRoom, Member } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { LocationProps, RoomsRepository } from '../../rooms.repository';
 import { calculateBoundingBox } from '@/application/utils/calculate-bounding-box';
@@ -7,6 +7,7 @@ import { calculateBoundingBox } from '@/application/utils/calculate-bounding-box
 @Injectable()
 export class InMemoryRoomsRepository implements RoomsRepository {
   public items: Room[] = [];
+  public members: Member[] = []; // Simular membros
 
   async create(data: Prisma.RoomCreateInput) {
     const roomCreated: Room = {
@@ -43,7 +44,7 @@ export class InMemoryRoomsRepository implements RoomsRepository {
     return roomCreated;
   }
 
-  async findById(id: string) {
+  async findById(id: string, includeMembers = false, includeVotes = false) {
     const room = this.items.find(
       (item) => item.id === id && item.status === StatusRoom.OPEN,
     );
@@ -52,7 +53,23 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       return null;
     }
 
-    return { ...room };
+    const result: any = { ...room };
+
+    if (includeMembers) {
+      // Simular membros relacionados para o teste
+      result.members = this.members
+        .filter((member) => member.room_id === room.id)
+        .map((member) => ({
+          ...member,
+          member: {
+            id: member.user_id,
+            name: `User ${member.user_id}`,
+            created_at: member.created_at,
+          },
+        }));
+    }
+
+    return result;
   }
 
   async findByLocation({ lat, lng, maxDistance }: LocationProps) {

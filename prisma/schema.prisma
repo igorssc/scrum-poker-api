@@ -59,12 +59,13 @@ model Room {
 }
 
 model Member {
-  id         String       @id @default(uuid())
-  user_id    String
-  room_id    String
-  vote       String?
-  created_at DateTime     @default(now())
-  status     StatusMember @default(PENDING)
+  id            String       @id @default(uuid())
+  user_id       String
+  room_id       String
+  vote          String?
+  created_at    DateTime     @default(now())
+  last_activity DateTime     @default(now())
+  status        StatusMember @default(PENDING)
 
   member User @relation(fields: [user_id], references: [id], onDelete: Cascade)
   room   Room @relation(fields: [room_id], references: [id], onDelete: Cascade)

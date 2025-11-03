@@ -68,6 +68,16 @@ export class VoteMemberService {
       true,
     );
 
+    await this.membersRepository.update(
+      {
+        roomId: data.roomId,
+        userId: data.userId,
+      },
+      {
+        last_activity: new Date(),
+      },
+    );
+
     await this.roomsRepository.update(data.roomId, {
       last_activity: new Date(),
     });

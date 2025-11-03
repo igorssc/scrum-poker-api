@@ -18,6 +18,8 @@ export class InMemoryMembersRepository implements MembersRepository {
       user_id: data.member.connect.id,
       room_id: data.room.connect.id,
       created_at: new Date(),
+      last_activity:
+        data.last_activity instanceof Date ? data.last_activity : new Date(),
       vote: data.vote || null,
       status: data.status || StatusMember.PENDING,
     };

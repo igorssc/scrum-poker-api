@@ -26,6 +26,8 @@ export class PrismaRoomsRepository implements RoomsRepository {
           vote: true,
           status: true,
           created_at: true,
+          last_activity: true,
+          user_id: true,
           id: true,
         },
       };
