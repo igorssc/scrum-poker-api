@@ -13,6 +13,12 @@ import { MembersModule } from '../members/members.module';
 import { DeleteUniqueRoomService } from './delete-unique-room.service';
 import { RevealVotesMembersService } from '../members/reveal-votes-members.service';
 import { CleanupInactiveRoomsService } from './cleanup-inactive-rooms.service';
+import { VotesRepository } from '@/application/repositories/votes.repository';
+import { VoteDetailsRepository } from '@/application/repositories/vote-details.repository';
+import { VotingRoundsRepository } from '@/application/repositories/voting-rounds.repository';
+import { PrismaVotesRepository } from '@/application/repositories/implementations/prisma/votes.repository';
+import { PrismaVoteDetailsRepository } from '@/application/repositories/implementations/prisma/vote-details.repository';
+import { PrismaVotingRoundsRepository } from '@/application/repositories/implementations/prisma/voting-rounds.repository';
 
 @Module({
   imports: [UsersModule, PrismaModule, MembersModule],
@@ -26,6 +32,9 @@ import { CleanupInactiveRoomsService } from './cleanup-inactive-rooms.service';
     CleanupInactiveRoomsService,
     { provide: RoomsRepository, useClass: PrismaRoomsRepository },
     { provide: MembersRepository, useClass: PrismaMembersRepository },
+    { provide: VotesRepository, useClass: PrismaVotesRepository },
+    { provide: VoteDetailsRepository, useClass: PrismaVoteDetailsRepository },
+    { provide: VotingRoundsRepository, useClass: PrismaVotingRoundsRepository },
   ],
   exports: [
     CreateRoomService,
@@ -36,6 +45,9 @@ import { CleanupInactiveRoomsService } from './cleanup-inactive-rooms.service';
     RevealVotesMembersService,
     CleanupInactiveRoomsService,
     RoomsRepository,
+    VotesRepository,
+    VoteDetailsRepository,
+    VotingRoundsRepository,
   ],
 })
 export class RoomsModule {}

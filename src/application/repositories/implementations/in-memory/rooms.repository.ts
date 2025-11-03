@@ -21,15 +21,21 @@ export class InMemoryRoomsRepository implements RoomsRepository {
       access: randomUUID(),
       theme: data.theme,
       cards_open: false,
-      start_timer: null,
-      stop_timer: null,
+      start_timer: data.start_timer instanceof Date ? data.start_timer : null,
+      stop_timer: data.stop_timer instanceof Date ? data.stop_timer : null,
       auto_grant_permissions: false,
       last_activity: new Date(),
-      who_can_edit: [data.owner.connect.id],
-      who_can_open_cards: [data.owner.connect.id],
-      who_can_aprove_entries: [data.owner.connect.id],
-      current_issue: null,
-      current_sector: null,
+      who_can_edit: Array.isArray(data.who_can_edit)
+        ? data.who_can_edit
+        : [data.owner.connect.id],
+      who_can_open_cards: Array.isArray(data.who_can_open_cards)
+        ? data.who_can_open_cards
+        : [data.owner.connect.id],
+      who_can_aprove_entries: Array.isArray(data.who_can_aprove_entries)
+        ? data.who_can_aprove_entries
+        : [data.owner.connect.id],
+      current_issue: data.current_issue || null,
+      current_sector: data.current_sector || null,
     };
 
     this.items.push(roomCreated);

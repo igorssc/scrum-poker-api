@@ -18,7 +18,7 @@ export class InMemoryMembersRepository implements MembersRepository {
       user_id: data.member.connect.id,
       room_id: data.room.connect.id,
       created_at: new Date(),
-      vote: null,
+      vote: data.vote || null,
       status: data.status || StatusMember.PENDING,
     };
 

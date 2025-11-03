@@ -7,11 +7,20 @@ import { InMemoryMembersRepository } from '@/application/repositories/implementa
 import { Test, TestingModule } from '@nestjs/testing';
 import { StatusRoom } from '@prisma/client';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { VotesRepository } from '@/application/repositories/votes.repository';
+import { VotingRoundsRepository } from '@/application/repositories/voting-rounds.repository';
+import { VoteDetailsRepository } from '@/application/repositories/vote-details.repository';
+import { InMemoryVotesRepository } from '@/application/repositories/implementations/in-memory/votes.repository';
+import { InMemoryVotingRoundsRepository } from '@/application/repositories/implementations/in-memory/voting-rounds.repository';
+import { InMemoryVoteDetailsRepository } from '@/application/repositories/implementations/in-memory/vote-details.repository';
 
 describe('RevealVotesMembersService', () => {
   let sut: RevealVotesMembersService;
   let roomsRepository: InMemoryRoomsRepository;
   let membersRepository: InMemoryMembersRepository;
+  let _votesRepository: InMemoryVotesRepository;
+  let _votingRoundsRepository: InMemoryVotingRoundsRepository;
+  let _voteDetailsRepository: InMemoryVoteDetailsRepository;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -19,12 +28,24 @@ describe('RevealVotesMembersService', () => {
         RevealVotesMembersService,
         { provide: RoomsRepository, useClass: InMemoryRoomsRepository },
         { provide: MembersRepository, useClass: InMemoryMembersRepository },
+        { provide: VotesRepository, useClass: InMemoryVotesRepository },
+        {
+          provide: VotingRoundsRepository,
+          useClass: InMemoryVotingRoundsRepository,
+        },
+        {
+          provide: VoteDetailsRepository,
+          useClass: InMemoryVoteDetailsRepository,
+        },
       ],
     }).compile();
 
     sut = moduleRef.get(RevealVotesMembersService);
     roomsRepository = moduleRef.get(RoomsRepository);
     membersRepository = moduleRef.get(MembersRepository);
+    _votesRepository = moduleRef.get(VotesRepository);
+    _votingRoundsRepository = moduleRef.get(VotingRoundsRepository);
+    _voteDetailsRepository = moduleRef.get(VoteDetailsRepository);
   });
 
   it('should reveal cards when user is room owner (owner always in who_can_open_cards)', async () => {
@@ -179,20 +200,129 @@ describe('RevealVotesMembersService', () => {
 
   it('should validate permissions before checking if user is in room', async () => {
     const room = await roomsRepository.create({
-      name: 'Sala Teste',
-      owner: { connect: { id: 'owner-1' } },
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
       status: StatusRoom.OPEN,
       lat: null,
       lng: null,
       private: false,
-      theme: 'default',
+      theme: 'theme-test',
+      who_can_open_cards: [],
     });
 
     await expect(
       sut.execute({
         roomId: room.id,
-        userId: 'outsider-user',
+        userId: 'user-id-test',
       }),
-    ).rejects.toBeInstanceOf(UnauthorizedException);
+    ).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('should save voting data when revealing cards with votes', async () => {
+    const startTime = new Date(Date.now() - 300000);
+    const stopTime = new Date();
+
+    const room = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+      who_can_open_cards: ['owner-id-test'],
+      current_issue: 'Test Feature',
+      current_sector: 'Backend',
+      start_timer: startTime,
+      stop_timer: stopTime,
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member1-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'nature/8.svg',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member2-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'nature/5.svg',
+    });
+
+    const result = await sut.execute({
+      roomId: room.id,
+      userId: 'owner-id-test',
+    });
+
+    expect(result.room.cards_open).toBe(true);
+
+    const vote = await _votesRepository.findByRoomAndTopic(
+      room.id,
+      'Test Feature',
+    );
+    expect(vote).toBeTruthy();
+    expect(vote?.topic).toBe('Test Feature');
+    expect(vote?.sector).toBe('Backend');
+  });
+
+  it('should only save votes with numeric values below 50', async () => {
+    const startTime = new Date(Date.now() - 300000);
+    const stopTime = new Date();
+
+    const room = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'theme-test',
+      who_can_open_cards: ['owner-id-test'],
+      current_issue: 'Test Feature',
+      current_sector: 'Backend',
+      start_timer: startTime,
+      stop_timer: stopTime,
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member1-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'nature/8.svg',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member2-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'nature/100.svg',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member3-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'XL',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member4-id' } },
+      room: { connect: { id: room.id } },
+      vote: 'nature/13.svg',
+    });
+
+    const result = await sut.execute({
+      roomId: room.id,
+      userId: 'owner-id-test',
+    });
+
+    expect(result.room.cards_open).toBe(true);
+
+    const vote = await _votesRepository.findByRoomAndTopic(
+      room.id,
+      'Test Feature',
+    );
+    expect(vote).toBeTruthy();
+
+    expect(vote?.finalized_at).toBeTruthy();
+    expect(vote?.total_duration).toBeTruthy();
+    expect(vote?.total_duration).toBe(300);
   });
 });

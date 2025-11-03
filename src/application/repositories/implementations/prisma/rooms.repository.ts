@@ -16,25 +16,54 @@ export class PrismaRoomsRepository implements RoomsRepository {
     return roomCreated;
   }
 
-  async findById(id: string, includeMembers = false) {
+  async findById(id: string, includeMembers = false, includeVotes = false) {
+    const includeConfig: any = {};
+
+    if (includeMembers) {
+      includeConfig.members = {
+        select: {
+          member: { select: { name: true, id: true, created_at: true } },
+          vote: true,
+          status: true,
+          created_at: true,
+          id: true,
+        },
+      };
+    }
+
+    if (includeVotes) {
+      includeConfig.votes = {
+        include: {
+          voting_rounds: {
+            include: {
+              votes: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              voted_at: 'asc',
+            },
+          },
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      };
+    }
+
     const room = await this.prisma.room.findUnique({
       where: {
         id,
         status: StatusRoom.OPEN,
       },
-      ...(includeMembers && {
-        include: {
-          members: {
-            select: {
-              member: { select: { name: true, id: true, created_at: true } },
-              vote: true,
-              status: true,
-              created_at: true,
-              id: true,
-            },
-          },
-        },
-      }),
+      ...(Object.keys(includeConfig).length > 0 && { include: includeConfig }),
     });
 
     return room;

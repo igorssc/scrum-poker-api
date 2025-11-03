@@ -8,6 +8,7 @@ import { Member } from '@prisma/client';
 import {
   ROOM_NOT_FOUND,
   USER_IS_NOT_IN_THE_ROOM,
+  VOTING_CARDS_ARE_OPEN,
 } from '@/application/errors/errors.constants';
 import { MembersRepository } from '@/application/repositories/members.repository';
 
@@ -34,6 +35,9 @@ export class VoteMemberService {
     const roomExists = await this.roomsRepository.findById(data.roomId);
 
     if (!roomExists) throw new NotFoundException(ROOM_NOT_FOUND);
+
+    if (roomExists.cards_open)
+      throw new UnauthorizedException(VOTING_CARDS_ARE_OPEN);
 
     const userActionIsOwnerTheRoom = roomExists.owner_id === data.userId;
 

@@ -13,7 +13,11 @@ export abstract class RoomsRepository {
 
   update: (RoomId: string, Room: Prisma.RoomUpdateInput) => Promise<Room>;
 
-  findById: (id: string, includeMembers?: boolean) => Promise<Room | null>;
+  findById: (
+    id: string,
+    includeMembers?: boolean,
+    includeVotes?: boolean,
+  ) => Promise<Room | null>;
 
   findByLocation: (props: LocationProps) => Promise<Room[] | null>;
 

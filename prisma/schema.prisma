@@ -83,7 +83,7 @@ model Vote {
   final_consensus String?
 
   room          Room          @relation(fields: [room_id], references: [id], onDelete: Cascade)
-  voting_Rounds VotingRound[]
+  voting_rounds VotingRound[]
 
   @@map("votes")
 }

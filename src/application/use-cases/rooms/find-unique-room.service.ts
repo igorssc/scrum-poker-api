@@ -24,7 +24,7 @@ export class FindUniqueRoomService {
       throw new BadRequestException(INVALID_PARAMS);
     }
 
-    const room = await this.roomsRepository.findById(query, true);
+    const room = await this.roomsRepository.findById(query, true, true);
 
     if (!room) {
       throw new NotFoundException(ROOM_NOT_FOUND);

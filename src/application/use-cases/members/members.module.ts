@@ -12,6 +12,12 @@ import { UsersModule } from '../users/users.module';
 import { SignInAcceptMemberService } from './sign-in-accept-member.service';
 import { SignInRefuseMemberService } from './sign-in-refuse-member.service';
 import { RevealVotesMembersService } from './reveal-votes-members.service';
+import { VotesRepository } from '@/application/repositories/votes.repository';
+import { PrismaVotesRepository } from '@/application/repositories/implementations/prisma/votes.repository';
+import { VotingRoundsRepository } from '@/application/repositories/voting-rounds.repository';
+import { PrismaVotingRoundsRepository } from '@/application/repositories/implementations/prisma/voting-rounds.repository';
+import { VoteDetailsRepository } from '@/application/repositories/vote-details.repository';
+import { PrismaVoteDetailsRepository } from '@/application/repositories/implementations/prisma/vote-details.repository';
 
 @Module({
   imports: [PrismaModule, UsersModule],
@@ -25,6 +31,9 @@ import { RevealVotesMembersService } from './reveal-votes-members.service';
     RevealVotesMembersService,
     { provide: RoomsRepository, useClass: PrismaRoomsRepository },
     { provide: MembersRepository, useClass: PrismaMembersRepository },
+    { provide: VotesRepository, useClass: PrismaVotesRepository },
+    { provide: VotingRoundsRepository, useClass: PrismaVotingRoundsRepository },
+    { provide: VoteDetailsRepository, useClass: PrismaVoteDetailsRepository },
   ],
   exports: [
     SignOutMemberService,
