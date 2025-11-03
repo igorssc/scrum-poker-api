@@ -28,6 +28,37 @@ export class PrismaService {
     this.client = getPrismaClient();
   }
 
+  static async executeWithRetry<T>(
+    operation: () => Promise<T>,
+    maxAttempts = 3,
+  ): Promise<T> {
+    let lastError: any;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        return await operation();
+      } catch (error: any) {
+        const msg = error?.message?.toLowerCase() || '';
+        if (
+          msg.includes('prepared statement') &&
+          msg.includes('already exists') &&
+          attempt < maxAttempts
+        ) {
+          // Força reconexão do PrismaClient
+          if (prisma) {
+            await prisma.$disconnect();
+            prisma = undefined;
+          }
+          await new Promise((res) => setTimeout(res, 100 * attempt));
+          prisma = getPrismaClient();
+          lastError = error;
+          continue;
+        }
+        throw error;
+      }
+    }
+    throw lastError;
+  }
+
   get user() {
     return this.client.user;
   }
