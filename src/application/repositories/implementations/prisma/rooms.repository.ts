@@ -9,66 +9,70 @@ export class PrismaRoomsRepository implements RoomsRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(room: Prisma.RoomCreateInput) {
-    const roomCreated = await this.prisma.room.create({
-      data: { ...room },
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.room.create({
+        data: { ...room },
+      });
     });
-
-    return roomCreated;
   }
 
   async findById(id: string, includeMembers = false, includeVotes = false) {
-    const includeConfig: any = {};
+    return await PrismaService.executeWithRetry(async () => {
+      const includeConfig: any = {};
 
-    if (includeMembers) {
-      includeConfig.members = {
-        select: {
-          member: { select: { name: true, id: true, created_at: true } },
-          vote: true,
-          status: true,
-          created_at: true,
-          last_activity: true,
-          user_id: true,
-          id: true,
-        },
-      };
-    }
+      if (includeMembers) {
+        includeConfig.members = {
+          select: {
+            member: { select: { name: true, id: true, created_at: true } },
+            vote: true,
+            status: true,
+            created_at: true,
+            last_activity: true,
+            user_id: true,
+            id: true,
+          },
+        };
+      }
 
-    if (includeVotes) {
-      includeConfig.votes = {
-        include: {
-          voting_rounds: {
-            include: {
-              votes: {
-                include: {
-                  user: {
-                    select: {
-                      id: true,
-                      name: true,
+      if (includeVotes) {
+        includeConfig.votes = {
+          include: {
+            voting_rounds: {
+              include: {
+                votes: {
+                  include: {
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
                     },
                   },
                 },
               },
-            },
-            orderBy: {
-              voted_at: 'asc',
+              orderBy: {
+                voted_at: 'asc',
+              },
             },
           },
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-      };
-    }
+          orderBy: {
+            created_at: 'desc',
+          },
+        };
+      }
 
-    const room = await this.prisma.room.findUnique({
-      where: {
-        id,
-        status: StatusRoom.OPEN,
-      },
-      ...(Object.keys(includeConfig).length > 0 && { include: includeConfig }),
+      const room = await this.prisma.room.findUnique({
+        where: {
+          id,
+          status: StatusRoom.OPEN,
+        },
+        ...(Object.keys(includeConfig).length > 0 && {
+          include: includeConfig,
+        }),
+      });
+
+      return room;
     });
-
-    return room;
   }
 
   async findByLocation({ lat, lng, maxDistance }: LocationProps) {
@@ -96,32 +100,38 @@ export class PrismaRoomsRepository implements RoomsRepository {
   }
 
   async totalCount() {
-    return await this.prisma.room.count();
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.room.count();
+    });
   }
 
   async findInactiveRooms(lastActivityBefore: Date) {
-    return await this.prisma.room.findMany({
-      where: {
-        status: StatusRoom.OPEN,
-        last_activity: {
-          lt: lastActivityBefore,
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.room.findMany({
+        where: {
+          status: StatusRoom.OPEN,
+          last_activity: {
+            lt: lastActivityBefore,
+          },
         },
-      },
+      });
     });
   }
 
   async update(roomId: string, room: Prisma.RoomUpdateInput) {
-    const data = await this.prisma.room.update({
-      where: {
-        id: roomId,
-      },
-      data: room,
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.room.update({
+        where: {
+          id: roomId,
+        },
+        data: room,
+      });
     });
-
-    return data;
   }
 
   async deleteUnique(roomId: string) {
-    return await this.prisma.room.delete({ where: { id: roomId } });
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.room.delete({ where: { id: roomId } });
+    });
   }
 }

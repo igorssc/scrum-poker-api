@@ -8,44 +8,48 @@ export class PrismaUsersRepository implements UsersRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(user: Prisma.UserCreateInput) {
-    const userCreated = await this.prisma.user.create({
-      data: { ...user },
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.user.create({
+        data: { ...user },
+      });
     });
-
-    return userCreated;
   }
 
   async findById(id: string, includeRoom = false) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-      ...(includeRoom && {
-        include: {
-          rooms: true,
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.user.findUnique({
+        where: {
+          id,
         },
-      }),
+        ...(includeRoom && {
+          include: {
+            rooms: true,
+          },
+        }),
+      });
     });
-
-    return user;
   }
 
   async totalCount() {
-    return await this.prisma.user.count();
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.user.count();
+    });
   }
 
   async update(userId: string, user: Prisma.UserUpdateInput) {
-    const data = await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: user,
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: user,
+      });
     });
-
-    return data;
   }
 
   async deleteUnique(userId: string) {
-    return await this.prisma.user.delete({ where: { id: userId } });
+    return await PrismaService.executeWithRetry(async () => {
+      return await this.prisma.user.delete({ where: { id: userId } });
+    });
   }
 }
