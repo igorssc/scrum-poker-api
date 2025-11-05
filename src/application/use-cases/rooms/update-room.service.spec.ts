@@ -660,4 +660,118 @@ describe('Update Room Use Case', () => {
     expect(roomUpdated.who_can_open_cards).toEqual(['owner-id-test']);
     expect(roomUpdated.who_can_aprove_entries).toEqual(['owner-id-test']);
   });
+
+  it('should clear all members votes when theme is changed', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'old-theme',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-1-id' } },
+      room: { connect: { id: roomCreated.id } },
+      vote: 'nature/5.svg',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-2-id' } },
+      room: { connect: { id: roomCreated.id } },
+      vote: 'nature/8.svg',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+      vote: 'nature/13.svg',
+    });
+
+    let member1 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-1-id',
+      roomId: roomCreated.id,
+    });
+    let member2 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-2-id',
+      roomId: roomCreated.id,
+    });
+    let ownerMember = await membersRepository.findByUserAndRoomId({
+      userId: 'owner-id-test',
+      roomId: roomCreated.id,
+    });
+
+    expect(member1.vote).toBe('nature/5.svg');
+    expect(member2.vote).toBe('nature/8.svg');
+    expect(ownerMember.vote).toBe('nature/13.svg');
+
+    await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      {
+        theme: 'new-theme',
+      },
+    );
+
+    member1 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-1-id',
+      roomId: roomCreated.id,
+    });
+    member2 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-2-id',
+      roomId: roomCreated.id,
+    });
+    ownerMember = await membersRepository.findByUserAndRoomId({
+      userId: 'owner-id-test',
+      roomId: roomCreated.id,
+    });
+
+    expect(member1.vote).toBeNull();
+    expect(member2.vote).toBeNull();
+    expect(ownerMember.vote).toBeNull();
+  });
+
+  it('should not clear votes when theme is not changed', async () => {
+    const roomCreated = await roomsRepository.create({
+      name: '0000 0000 0001',
+      owner: { connect: { id: 'owner-id-test' } },
+      status: StatusRoom.OPEN,
+      lat: null,
+      lng: null,
+      private: false,
+      theme: 'existing-theme',
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'owner-id-test' } },
+      room: { connect: { id: roomCreated.id } },
+    });
+
+    await membersRepository.create({
+      member: { connect: { id: 'member-1-id' } },
+      room: { connect: { id: roomCreated.id } },
+      vote: 'nature/5.svg',
+    });
+
+    await sut.execute(
+      {
+        roomId: roomCreated.id,
+        userId: 'owner-id-test',
+      },
+      {
+        name: 'Updated Room Name',
+      },
+    );
+
+    const member1 = await membersRepository.findByUserAndRoomId({
+      userId: 'member-1-id',
+      roomId: roomCreated.id,
+    });
+
+    expect(member1.vote).toBe('nature/5.svg');
+  });
 });

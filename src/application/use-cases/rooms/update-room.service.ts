@@ -134,6 +134,11 @@ export class UpdateRoomService {
         : allUsersWithOwner;
     }
 
+    // Se o tema foi alterado, limpar os votos de todos os membros
+    if (theme && theme !== roomExists.theme) {
+      await this.membersRepository.update({ roomId }, { vote: null });
+    }
+
     const roomUpdated = await this.roomsRepository.update(roomId, {
       name: capitalizeInitials(name),
       lat,
