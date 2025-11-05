@@ -145,6 +145,7 @@ export class UpdateRoomService {
       lng,
       theme,
       private: privateRoom,
+      ...(theme && theme !== roomExists.theme && { cards_open: false }),
       ...(finalWhoCanEdit && { who_can_edit: [...new Set(finalWhoCanEdit)] }),
       ...(finalWhoCanOpenCards && {
         who_can_open_cards: [...new Set(finalWhoCanOpenCards)],
