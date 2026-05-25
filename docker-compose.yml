@@ -38,7 +38,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
+      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
     command: ash -c "npx prisma migrate dev && npm install && npm run start:dev"
     networks:
       - app_tier
@@ -61,13 +61,18 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    entrypoint: ["npx", "prisma", "studio"]
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "npx prisma@6.18.0 studio --schema prisma/schema.prisma --port 5555 --hostname 0.0.0.0",
+      ]
     ports:
       - ${PRISMA_STUDIO_PORT:-5555}:5555
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
+      - POSTGRES_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@scrum_poker_postgres:5432/${POSTGRES_DATABASE}
     networks:
       - app_tier
     depends_on:
