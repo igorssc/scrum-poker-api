@@ -21,6 +21,7 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "load:room-flow": "k6 run ./k6/room-sign-in-vote.js",
     "refresh": "cd prisma && ./refresh-db.sh",
     "migrate:dev": "docker exec -it scrum_poker_api npx prisma migrate dev",
     "prepare": "husky"
