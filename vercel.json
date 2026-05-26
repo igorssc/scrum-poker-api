@@ -1,11 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "npm ci --include=dev && npm run build",
   "routes": [
-    { "src": "/(.*)", "dest": "dist/main.js" }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+    { "src": "/(.*)", "dest": "dist/vercel.js" }
+  ]
 }
