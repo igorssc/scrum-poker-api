@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm ci --include=dev && npm run build",
-  "routes": [
-    { "src": "/(.*)", "dest": "dist/vercel.js" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api" }
   ]
 }

@@ -27,7 +27,7 @@ async function createApp() {
   return app;
 }
 
-export default async function handler(req: Request, res: Response) {
+async function handler(req: Request, res: Response) {
   if (!appPromise) {
     appPromise = createApp();
   }
@@ -37,3 +37,8 @@ export default async function handler(req: Request, res: Response) {
 
   return expressApp(req, res);
 }
+
+export default handler;
+
+module.exports = handler;
+module.exports.default = handler;
